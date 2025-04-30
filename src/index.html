@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tar.copy - Beautiful Code Screenshots</title>
+    <link rel="icon" href="favicon1.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .code-input {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            tab-size: 2;
+        }
+        .code-preview {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            tab-size: 2;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .hljs {
+            background: transparent !important;
+            padding: 0 !important;
+        }
+        .download-btn {
+            transition: all 0.2s ease;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+        .theme-selector {
+            transition: all 0.2s ease;
+        }
+        .theme-selector:hover {
+            transform: scale(1.05);
+        }
+        .theme-selector.active {
+            border: 2px solid #3b82f6;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex flex-col items-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2 flex items-center">
+                <span class="bg-blue-500 text-white px-3 py-1 rounded-lg mr-2">tar</span>
+                <span class="text-gray-700">.copy</span>
+            </h1>
+            <p class="text-gray-600 text-lg">Transform your code into beautiful, shareable images</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Input Section -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Your Code</h2>
+                    <div class="flex space-x-2">
+                        <button id="clear-btn" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition">
+                            <i class="fas fa-trash-alt mr-1"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                <textarea id="code-input" class="code-input w-full h-96 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Paste your code here..."></textarea>
+                
+                <div class="mt-4">
+                    <label for="language-select" class="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                    <select id="language-select" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option value="auto">Auto-detect</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="csharp">C#</option>
+                        <option value="php">PHP</option>
+                        <option value="ruby">Ruby</option>
+                        <option value="go">Go</option>
+                        <option value="cpp">C++</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="sql">SQL</option>
+                        <option value="bash">Bash</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Preview</h2>
+                    <button id="download-btn" class="download-btn px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center">
+                        <i class="fas fa-download mr-2"></i> Download PNG
+                    </button>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Theme</label>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="theme-selector active" data-theme="atom-one-dark">
+                            <div class="w-12 h-8 rounded bg-gray-800 border-2 border-blue-500"></div>
+                            <span class="text-xs mt-1">Dark</span>
+                        </div>
+                        <div class="theme-selector" data-theme="atom-one-light">
+                            <div class="w-12 h-8 rounded bg-gray-100 border-2 border-transparent"></div>
+                            <span class="text-xs mt-1">Light</span>
+                        </div>
+                        <div class="theme-selector" data-theme="github-dark">
+                            <div class="w-12 h-8 rounded bg-gray-900 border-2 border-transparent"></div>
+                            <span class="text-xs mt-1">GitHub Dark</span>
+                        </div>
+                        <div class="theme-selector" data-theme="github">
+                            <div class="w-12 h-8 rounded bg-white border-2 border-transparent"></div>
+                            <span class="text-xs mt-1">GitHub</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Background</label>
+                    <div class="flex items-center">
+                        <label class="inline-flex items-center mr-4">
+                            <input type="radio" class="form-radio text-blue-500" name="background" value="solid" checked>
+                            <span class="ml-2">Solid</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" class="form-radio text-blue-500" name="background" value="transparent">
+                            <span class="ml-2">Transparent</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Padding</label>
+                    <input type="range" id="padding-slider" min="10" max="50" value="20" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>Small</span>
+                        <span>Large</span>
+                    </div>
+                </div>
+                
+                <!-- Preview Container -->
+                <div id="preview-container" class="mt-4 flex justify-center">
+                    <div id="code-preview" class="code-preview bg-gray-800 p-5 w-full overflow-auto">
+                        <pre><code id="highlighted-code" class="text-sm">// Your beautiful code will appear here</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            <p>Made with <i class="fas fa-heart text-red-500"></i> for developers | tar.copy © 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const codeInput = document.getElementById('code-input');
+            const languageSelect = document.getElementById('language-select');
+            const highlightedCode = document.getElementById('highlighted-code');
+            const codePreview = document.getElementById('code-preview');
+            const downloadBtn = document.getElementById('download-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const paddingSlider = document.getElementById('padding-slider');
+            const themeSelectors = document.querySelectorAll('.theme-selector');
+            const backgroundRadios = document.querySelectorAll('input[name="background"]');
+            
+            // Current settings
+            let currentTheme = 'atom-one-dark';
+            let currentBackground = 'solid';
+            let currentPadding = 20;
+            
+            // Initialize highlight.js
+            hljs.highlightAll();
+            
+            // Auto-detect language
+            function detectLanguage(code) {
+                if (!code) return 'plaintext';
+                
+                // Simple detection based on code patterns
+                if (code.includes('<?php')) return 'php';
+                if (code.includes('def ') || code.includes('import ')) return 'python';
+                if (code.includes('function ') || code.includes('=>') || code.includes('const ') || code.includes('let ') || code.includes('var ')) return 'javascript';
+                if (code.includes('public class ') || code.includes('System.out.println')) return 'java';
+                if (code.includes('using ') || code.includes('namespace ') || code.includes('Console.WriteLine')) return 'csharp';
+                if (code.includes('package ') || code.includes('func ')) return 'go';
+                if (code.includes('<?xml ') || code.includes('<html') || code.includes('<div')) return 'html';
+                if (code.includes('SELECT ') || code.includes('FROM ') || code.includes('WHERE ')) return 'sql';
+                if (code.includes('#include ') || code.includes('std::')) return 'cpp';
+                if (code.includes('#!/bin/bash') || code.includes('#!/usr/bin/env bash')) return 'bash';
+                
+                return 'plaintext';
+            }
+            
+            // Update preview
+            function updatePreview() {
+                const code = codeInput.value;
+                let language = languageSelect.value === 'auto' ? detectLanguage(code) : languageSelect.value;
+                
+                // Set the language class
+                highlightedCode.className = language;
+                highlightedCode.textContent = code || '// Your beautiful code will appear here';
+                
+                // Highlight the code
+                hljs.highlightElement(highlightedCode);
+                
+                // Update preview styling
+                updatePreviewStyling();
+            }
+            
+            // Update preview styling based on settings
+            function updatePreviewStyling() {
+                // Set padding with a limit
+                codePreview.style.padding = `${Math.min(currentPadding, 30)}px`;
+
+                // Set background
+                if (currentBackground === 'transparent') {
+                    codePreview.style.background = 'transparent';
+                } else {
+                    codePreview.style.background = currentTheme.includes('light') || currentTheme === 'github' ? '#ffffff' : '#282c34';
+                }
+
+                // Ensure the preview container dynamically adjusts to content
+                codePreview.style.width = 'auto';
+                codePreview.style.height = 'auto';
+            }
+            
+            // Download as PNG
+            function downloadAsPNG() {
+                const previewElement = document.getElementById('code-preview');
+                html2canvas(previewElement, {
+                    scale: 2, // Increase resolution for crisp quality
+                    backgroundColor: currentBackground === 'transparent' ? null : previewElement.style.background, // Match theme background
+                    useCORS: true // Ensure cross-origin resources are loaded
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'code-screenshot.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            }
+            
+            // Event Listeners
+            codeInput.addEventListener('input', updatePreview);
+            languageSelect.addEventListener('change', updatePreview);
+            paddingSlider.addEventListener('input', function() {
+                currentPadding = parseInt(this.value);
+                updatePreviewStyling();
+            });
+            
+            themeSelectors.forEach(selector => {
+                selector.addEventListener('click', function() {
+                    // Remove active class from all
+                    themeSelectors.forEach(s => s.classList.remove('active'));
+                    // Add active class to clicked
+                    this.classList.add('active');
+                    
+                    // Get theme name
+                    currentTheme = this.dataset.theme;
+                    
+                    // Load the new theme
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/${currentTheme}.min.css`;
+                    link.title = currentTheme;
+                    
+                    // Remove old theme
+                    const oldTheme = document.querySelector('link[title]');
+                    if (oldTheme) {
+                        document.head.removeChild(oldTheme);
+                    }
+                    
+                    // Add new theme
+                    document.head.appendChild(link);
+                    
+                    // Update preview
+                    updatePreview();
+                });
+            });
+            
+            backgroundRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    currentBackground = this.value;
+                    updatePreviewStyling();
+                });
+            });
+            
+            downloadBtn.addEventListener('click', downloadAsPNG);
+            
+            clearBtn.addEventListener('click', function() {
+                codeInput.value = '';
+                updatePreview();
+            });
+            
+            // Initial update
+            updatePreview();
+        });
+    </script>
+</body>
+</html>
