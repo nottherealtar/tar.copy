@@ -6,11 +6,30 @@
     <title>tar.copy - Beautiful Code Screenshots</title>
     <link rel="icon" href="favicon1.ico" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Additional highlight.js languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/scala.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/elixir.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/haskell.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/lua.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/r.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/julia.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/clojure.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/nginx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/graphql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/solidity.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -18,378 +37,248 @@
                     fontFamily: {
                         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
                         sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                    colors: {
-                        dark: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            850: '#172033',
-                            900: '#0f172a',
-                            950: '#0a0f1a'
-                        }
                     }
                 }
             }
         }
     </script>
     <style>
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: #475569 transparent;
-        }
-        *::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        *::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        *::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 3px;
-        }
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 50%, #1e293b 100%);
-            min-height: 100vh;
-        }
-        .code-input {
-            font-family: 'JetBrains Mono', monospace;
-            tab-size: 2;
-            resize: none;
-        }
-        .code-preview {
-            font-family: 'JetBrains Mono', monospace;
-            tab-size: 2;
-        }
-        .hljs {
-            background: transparent !important;
-            padding: 0 !important;
-        }
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.5);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(71, 85, 105, 0.3);
-        }
-        .window-chrome {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            gap: 8px;
-        }
-        .window-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
+        * { scrollbar-width: thin; scrollbar-color: #475569 transparent; }
+        *::-webkit-scrollbar { width: 6px; height: 6px; }
+        *::-webkit-scrollbar-track { background: transparent; }
+        *::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 50%, #1e293b 100%); min-height: 100vh; }
+        .code-input, .code-preview { font-family: 'JetBrains Mono', monospace; tab-size: 2; }
+        .hljs { background: transparent !important; padding: 0 !important; }
+        .glass-panel { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(71, 85, 105, 0.3); }
+
+        /* Window Chrome Styles */
+        .window-chrome { display: flex; align-items: center; padding: 12px 16px; gap: 8px; }
+        .window-dot { width: 12px; height: 12px; border-radius: 50%; }
         .window-dot.red { background: #ff5f56; }
         .window-dot.yellow { background: #ffbd2e; }
         .window-dot.green { background: #27ca40; }
-        .window-title {
-            flex: 1;
-            text-align: center;
-            font-size: 13px;
-            opacity: 0.6;
-            font-weight: 500;
-        }
-        .line-numbers {
-            text-align: right;
-            padding-right: 16px;
-            user-select: none;
-            opacity: 0.4;
-            font-size: inherit;
-            line-height: inherit;
-        }
-        .toggle-switch {
-            position: relative;
-            width: 40px;
-            height: 22px;
-            background: #334155;
-            border-radius: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .toggle-switch.active {
-            background: #3b82f6;
-        }
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 18px;
-            height: 18px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        }
-        .toggle-switch.active::after {
-            transform: translateX(18px);
-        }
-        .gradient-btn {
-            width: 100%;
-            height: 28px;
-            border-radius: 6px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.15s;
-            position: relative;
-        }
-        .gradient-btn:hover {
-            transform: scale(1.03);
-        }
-        .gradient-btn.active {
-            border-color: #3b82f6;
-        }
-        .gradient-btn.active::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border: 2px solid rgba(59, 130, 246, 0.3);
-            border-radius: 10px;
-        }
-        .theme-chip {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s;
-            border: 1px solid transparent;
-            white-space: nowrap;
-        }
-        .theme-chip:hover {
-            transform: translateY(-1px);
-        }
-        .theme-chip.active {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-        }
-        .btn-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.15s;
-            cursor: pointer;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
-        }
-        .btn-ghost {
-            background: rgba(51, 65, 85, 0.5);
-            color: #94a3b8;
-            border: 1px solid rgba(71, 85, 105, 0.5);
-        }
-        .btn-ghost:hover {
-            background: rgba(51, 65, 85, 0.8);
-            color: #e2e8f0;
-        }
-        .slider-dark {
-            -webkit-appearance: none;
-            height: 4px;
-            border-radius: 2px;
-            background: #334155;
-        }
-        .slider-dark::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #3b82f6;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
-        }
-        .preview-canvas {
-            background: repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 20px 20px;
-            border-radius: 12px;
-            padding: 32px;
-        }
-        .input-dark {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(71, 85, 105, 0.4);
-            color: #e2e8f0;
-            transition: all 0.15s;
-        }
-        .input-dark:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-            outline: none;
-        }
-        .input-dark::placeholder {
-            color: #64748b;
-        }
-        .label-text {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #64748b;
-        }
-        .control-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 0;
-        }
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 14px;
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-        }
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-        .glow-line {
-            height: 1px;
-            background: linear-gradient(90deg, transparent 0%, #3b82f6 50%, transparent 100%);
-            opacity: 0.5;
-        }
-        .stat-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        .logo-glow {
-            animation: pulse-glow 3s ease-in-out infinite;
-        }
+        .window-title { flex: 1; text-align: center; font-size: 13px; opacity: 0.6; font-weight: 500; }
+
+        /* Windows 11 Style */
+        .windows-chrome { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; }
+        .windows-title { font-size: 12px; opacity: 0.8; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+        .windows-controls { display: flex; gap: 0; }
+        .windows-btn { width: 46px; height: 30px; display: flex; align-items: center; justify-content: center; opacity: 0.6; }
+        .windows-btn:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+        .windows-btn.close:hover { background: #e81123; opacity: 1; }
+
+        /* Linux Style */
+        .linux-chrome { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; }
+        .linux-title { font-size: 13px; opacity: 0.9; font-weight: 500; }
+        .linux-controls { display: flex; gap: 8px; }
+        .linux-btn { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+
+        /* Minimal Style */
+        .minimal-chrome { height: 8px; }
+
+        .line-numbers { text-align: right; padding-right: 16px; user-select: none; opacity: 0.4; font-size: inherit; line-height: inherit; }
+        .line-highlight { background: rgba(255, 255, 255, 0.1); margin: 0 -16px; padding: 0 16px; display: block; }
+
+        .toggle-switch { position: relative; width: 40px; height: 22px; background: #334155; border-radius: 11px; cursor: pointer; transition: all 0.2s; }
+        .toggle-switch.active { background: #3b82f6; }
+        .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .toggle-switch.active::after { transform: translateX(18px); }
+
+        .gradient-btn { width: 100%; height: 28px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; position: relative; }
+        .gradient-btn:hover { transform: scale(1.03); }
+        .gradient-btn.active { border-color: #3b82f6; }
+
+        .theme-chip { padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; white-space: nowrap; }
+        .theme-chip:hover { transform: translateY(-1px); }
+        .theme-chip.active { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+
+        .btn-action { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; transition: all 0.15s; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35); }
+        .btn-ghost { background: rgba(51, 65, 85, 0.5); color: #94a3b8; border: 1px solid rgba(71, 85, 105, 0.5); }
+        .btn-ghost:hover { background: rgba(51, 65, 85, 0.8); color: #e2e8f0; }
+        .btn-social { padding: 6px 12px; font-size: 11px; }
+
+        .slider-dark { -webkit-appearance: none; height: 4px; border-radius: 2px; background: #334155; }
+        .slider-dark::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #3b82f6; cursor: pointer; }
+
+        .preview-canvas { background: repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 20px 20px; border-radius: 12px; padding: 24px; overflow: auto; }
+        .input-dark { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(71, 85, 105, 0.4); color: #e2e8f0; transition: all 0.15s; }
+        .input-dark:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); outline: none; }
+        .input-dark::placeholder { color: #64748b; }
+
+        .label-text { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; }
+        .control-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; }
+        .glow-line { height: 1px; background: linear-gradient(90deg, transparent 0%, #3b82f6 50%, transparent 100%); opacity: 0.3; margin: 12px 0; }
+
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        .stat-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .tab-btn { padding: 6px 14px; font-size: 12px; font-weight: 500; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+        .tab-btn.active { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .tab-btn:not(.active) { color: #64748b; }
+        .tab-btn:not(.active):hover { color: #94a3b8; }
+
+        .section-card { background: rgba(15, 23, 42, 0.4); border-radius: 8px; padding: 12px; }
+        .preset-btn { padding: 6px 12px; font-size: 11px; font-weight: 500; border-radius: 6px; cursor: pointer; transition: all 0.15s; background: rgba(51, 65, 85, 0.3); color: #94a3b8; border: 1px solid rgba(71, 85, 105, 0.3); }
+        .preset-btn:hover { background: rgba(51, 65, 85, 0.5); color: #e2e8f0; }
+        .preset-btn.active { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
+
+        .color-input { width: 32px; height: 24px; border: none; border-radius: 4px; cursor: pointer; background: transparent; }
+        .color-input::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-input::-webkit-color-swatch { border: none; border-radius: 4px; }
+
+        .highlight-input { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(71, 85, 105, 0.4); color: #e2e8f0; padding: 6px 10px; border-radius: 6px; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+
+        /* GIF Recording indicator */
+        .recording-indicator { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(239, 68, 68, 0.2); border-radius: 6px; color: #f87171; font-size: 12px; font-weight: 600; }
+        .recording-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        .modal-content { background: #1e293b; border-radius: 16px; padding: 24px; max-width: 500px; width: 90%; border: 1px solid rgba(71, 85, 105, 0.3); }
     </style>
 </head>
 <body class="text-slate-300">
-    <!-- Background decoration -->
+    <!-- Background -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
         <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
         <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
     </div>
 
-    <div class="relative container mx-auto px-4 py-6 max-w-7xl">
+    <div class="relative container mx-auto px-4 py-4 max-w-[1600px]">
         <!-- Header -->
-        <header class="flex items-center justify-between mb-8">
+        <header class="flex items-center justify-between mb-6">
             <div class="flex items-center gap-3">
-                <div class="flex items-center">
-                    <span class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">tar</span>
-                    <span class="text-2xl font-bold text-slate-400">.</span>
-                    <span class="text-2xl font-bold text-slate-300">copy</span>
-                </div>
-                <div class="hidden sm:block h-6 w-px bg-slate-700"></div>
-                <span class="hidden sm:block text-sm text-slate-500">Code Screenshots</span>
+                <span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">tar</span>
+                <span class="text-xl font-bold text-slate-400">.</span>
+                <span class="text-xl font-bold text-slate-300">copy</span>
+                <span class="hidden sm:block text-xs text-slate-600 ml-2">Pro Code Screenshots</span>
             </div>
-            <div class="flex items-center gap-3">
-                <button id="import-json-btn" class="btn-action btn-ghost text-xs px-3 py-2">
-                    <i class="fas fa-file-import"></i>
-                    <span class="hidden sm:inline">Import</span>
+            <div class="flex items-center gap-2">
+                <button id="import-json-btn" class="btn-action btn-ghost text-xs px-3 py-1.5">
+                    <i class="fas fa-file-import"></i><span class="hidden sm:inline">Import</span>
                 </button>
-                <button id="export-json-btn" class="btn-action btn-ghost text-xs px-3 py-2">
-                    <i class="fas fa-file-export"></i>
-                    <span class="hidden sm:inline">Export</span>
+                <button id="export-json-btn" class="btn-action btn-ghost text-xs px-3 py-1.5">
+                    <i class="fas fa-file-export"></i><span class="hidden sm:inline">Export</span>
                 </button>
             </div>
         </header>
 
         <!-- Main Content -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Left Sidebar - Controls -->
-            <div class="lg:col-span-3 space-y-4">
-                <!-- Code Input Card -->
-                <div class="glass-panel rounded-xl p-4">
-                    <div class="flex items-center justify-between mb-3">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-4">
+            <!-- Left Sidebar -->
+            <div class="xl:col-span-3 space-y-3">
+                <!-- Code Input -->
+                <div class="glass-panel rounded-xl p-3">
+                    <div class="flex items-center justify-between mb-2">
                         <span class="label-text">Code</span>
-                        <button id="clear-btn" class="text-xs text-slate-500 hover:text-slate-300 transition">
-                            <i class="fas fa-times mr-1"></i>Clear
-                        </button>
+                        <button id="clear-btn" class="text-xs text-slate-500 hover:text-slate-300"><i class="fas fa-times mr-1"></i>Clear</button>
                     </div>
-                    <textarea id="code-input" class="code-input input-dark w-full h-48 p-3 rounded-lg text-sm" placeholder="// Paste your code here..."></textarea>
-                </div>
-
-                <!-- Settings Card -->
-                <div class="glass-panel rounded-xl p-4 space-y-4">
-                    <!-- Language & Filename -->
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="label-text block mb-2">Language</label>
-                            <select id="language-select" class="input-dark w-full p-2 rounded-lg text-sm">
-                                <option value="auto">Auto</option>
+                    <textarea id="code-input" class="code-input input-dark w-full h-40 p-3 rounded-lg text-sm resize-none" placeholder="// Paste your code here..."></textarea>
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <select id="language-select" class="input-dark p-2 rounded-lg text-xs">
+                            <option value="auto">Auto Detect</option>
+                            <optgroup label="Popular">
                                 <option value="javascript">JavaScript</option>
                                 <option value="typescript">TypeScript</option>
                                 <option value="python">Python</option>
                                 <option value="java">Java</option>
                                 <option value="csharp">C#</option>
-                                <option value="php">PHP</option>
-                                <option value="ruby">Ruby</option>
+                                <option value="cpp">C++</option>
                                 <option value="go">Go</option>
                                 <option value="rust">Rust</option>
-                                <option value="cpp">C++</option>
+                            </optgroup>
+                            <optgroup label="Web">
                                 <option value="html">HTML</option>
                                 <option value="css">CSS</option>
-                                <option value="sql">SQL</option>
-                                <option value="bash">Bash</option>
+                                <option value="php">PHP</option>
+                                <option value="ruby">Ruby</option>
+                            </optgroup>
+                            <optgroup label="Data">
                                 <option value="json">JSON</option>
                                 <option value="yaml">YAML</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="label-text block mb-2">Filename</label>
-                            <input type="text" id="filename-input" class="input-dark w-full p-2 rounded-lg text-sm" placeholder="app.js">
+                                <option value="sql">SQL</option>
+                                <option value="graphql">GraphQL</option>
+                            </optgroup>
+                            <optgroup label="Mobile">
+                                <option value="swift">Swift</option>
+                                <option value="kotlin">Kotlin</option>
+                                <option value="dart">Dart</option>
+                            </optgroup>
+                            <optgroup label="Functional">
+                                <option value="haskell">Haskell</option>
+                                <option value="elixir">Elixir</option>
+                                <option value="scala">Scala</option>
+                                <option value="clojure">Clojure</option>
+                            </optgroup>
+                            <optgroup label="Scientific">
+                                <option value="r">R</option>
+                                <option value="julia">Julia</option>
+                                <option value="matlab">MATLAB</option>
+                            </optgroup>
+                            <optgroup label="DevOps">
+                                <option value="bash">Bash</option>
+                                <option value="dockerfile">Dockerfile</option>
+                                <option value="nginx">Nginx</option>
+                            </optgroup>
+                            <optgroup label="Other">
+                                <option value="lua">Lua</option>
+                                <option value="solidity">Solidity</option>
+                                <option value="markdown">Markdown</option>
+                            </optgroup>
+                        </select>
+                        <input type="text" id="filename-input" class="input-dark p-2 rounded-lg text-xs" placeholder="filename.js">
+                    </div>
+                </div>
+
+                <!-- Appearance -->
+                <div class="glass-panel rounded-xl p-3 space-y-3">
+                    <span class="label-text">Appearance</span>
+
+                    <!-- Themes -->
+                    <div class="section-card">
+                        <div class="label-text mb-2 text-[9px]">Theme</div>
+                        <div class="flex flex-wrap gap-1">
+                            <button class="theme-chip active bg-[#282c34] text-slate-200" data-theme="atom-one-dark">Atom</button>
+                            <button class="theme-chip bg-[#fafafa] text-slate-800" data-theme="atom-one-light">Light</button>
+                            <button class="theme-chip bg-[#0d1117] text-slate-200" data-theme="github-dark">GitHub</button>
+                            <button class="theme-chip bg-[#272822] text-[#f8f8f2]" data-theme="monokai">Monokai</button>
+                            <button class="theme-chip bg-[#282a36] text-[#bd93f9]" data-theme="dracula">Dracula</button>
+                            <button class="theme-chip bg-[#2e3440] text-[#88c0d0]" data-theme="nord">Nord</button>
+                            <button class="theme-chip bg-[#1a1b26] text-[#7aa2f7]" data-theme="tokyo-night-dark">Tokyo</button>
+                            <button class="theme-chip bg-[#002b36] text-[#839496]" data-theme="solarized-dark">Solar</button>
+                            <button class="theme-chip bg-[#011627] text-[#d6deeb]" data-theme="night-owl">Owl</button>
+                            <button class="theme-chip bg-[#1e1e1e] text-[#d4d4d4]" data-theme="vs2015">VS Code</button>
                         </div>
                     </div>
 
-                    <div class="glow-line"></div>
-
-                    <!-- Theme -->
-                    <div>
-                        <label class="label-text block mb-2">Theme</label>
-                        <div class="flex flex-wrap gap-1.5">
-                            <button class="theme-chip active bg-slate-800 text-slate-200" data-theme="atom-one-dark">Atom</button>
-                            <button class="theme-chip bg-slate-100 text-slate-800" data-theme="atom-one-light">Light</button>
-                            <button class="theme-chip bg-slate-900 text-slate-200" data-theme="github-dark">GitHub</button>
-                            <button class="theme-chip bg-indigo-900 text-indigo-200" data-theme="monokai">Monokai</button>
-                            <button class="theme-chip bg-slate-800 text-purple-300" data-theme="dracula">Dracula</button>
+                    <!-- Window Style -->
+                    <div class="section-card">
+                        <div class="label-text mb-2 text-[9px]">Window Style</div>
+                        <div class="flex gap-1">
+                            <button class="preset-btn active" data-window="macos"><i class="fab fa-apple mr-1"></i>macOS</button>
+                            <button class="preset-btn" data-window="windows"><i class="fab fa-windows mr-1"></i>Win</button>
+                            <button class="preset-btn" data-window="linux"><i class="fab fa-linux mr-1"></i>Linux</button>
+                            <button class="preset-btn" data-window="minimal">Minimal</button>
+                            <button class="preset-btn" data-window="none">None</button>
                         </div>
                     </div>
-
-                    <div class="glow-line"></div>
 
                     <!-- Background -->
-                    <div>
-                        <label class="label-text block mb-2">Background</label>
-                        <div class="grid grid-cols-5 gap-1.5">
+                    <div class="section-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="label-text text-[9px]">Background</div>
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="custom-bg-color" class="color-input" value="#667eea">
+                                <input type="color" id="custom-bg-color2" class="color-input" value="#764ba2">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-6 gap-1">
                             <div class="gradient-btn active" data-bg="gradient-1" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
                             <div class="gradient-btn" data-bg="gradient-2" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
                             <div class="gradient-btn" data-bg="gradient-3" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
@@ -397,136 +286,252 @@
                             <div class="gradient-btn" data-bg="gradient-5" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
                             <div class="gradient-btn" data-bg="gradient-6" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
                             <div class="gradient-btn" data-bg="gradient-7" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);"></div>
+                            <div class="gradient-btn" data-bg="gradient-8" style="background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);"></div>
+                            <div class="gradient-btn" data-bg="gradient-9" style="background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);"></div>
                             <div class="gradient-btn" data-bg="solid-dark" style="background: #1e293b;"></div>
                             <div class="gradient-btn" data-bg="solid-light" style="background: #f1f5f9;"></div>
                             <div class="gradient-btn" data-bg="transparent" style="background: repeating-conic-gradient(#475569 0% 25%, #334155 0% 50%) 50% / 6px 6px;"></div>
                         </div>
                     </div>
 
-                    <div class="glow-line"></div>
+                    <!-- Width Presets -->
+                    <div class="section-card">
+                        <div class="label-text mb-2 text-[9px]">Width</div>
+                        <div class="flex gap-1 mb-2">
+                            <button class="preset-btn active" data-width="auto">Auto</button>
+                            <button class="preset-btn" data-width="480">Mobile</button>
+                            <button class="preset-btn" data-width="680">Docs</button>
+                            <button class="preset-btn" data-width="800">Blog</button>
+                            <button class="preset-btn" data-width="1200">Wide</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="range" id="width-slider" min="300" max="1400" value="600" class="slider-dark flex-1">
+                            <span id="width-value" class="text-xs font-mono text-slate-400 w-14 text-right">Auto</span>
+                        </div>
+                    </div>
 
                     <!-- Toggles -->
-                    <div class="space-y-2">
+                    <div class="section-card space-y-1">
                         <div class="control-row">
-                            <span class="text-sm text-slate-400">Window Controls</span>
-                            <div id="toggle-chrome" class="toggle-switch active"></div>
-                        </div>
-                        <div class="control-row">
-                            <span class="text-sm text-slate-400">Line Numbers</span>
+                            <span class="text-xs text-slate-400">Line Numbers</span>
                             <div id="toggle-lines" class="toggle-switch"></div>
                         </div>
                         <div class="control-row">
-                            <span class="text-sm text-slate-400">Shadow</span>
+                            <span class="text-xs text-slate-400">Shadow</span>
                             <div id="toggle-shadow" class="toggle-switch active"></div>
                         </div>
                         <div class="control-row">
-                            <span class="text-sm text-slate-400">Watermark</span>
+                            <span class="text-xs text-slate-400">Watermark</span>
                             <div id="toggle-watermark" class="toggle-switch"></div>
                         </div>
                     </div>
 
-                    <div class="glow-line"></div>
-
                     <!-- Sliders -->
-                    <div class="space-y-3">
+                    <div class="section-card space-y-2">
                         <div>
                             <div class="flex justify-between mb-1">
-                                <span class="text-xs text-slate-500">Padding</span>
-                                <span id="padding-value" class="text-xs font-mono text-slate-400">32px</span>
+                                <span class="text-[10px] text-slate-500">Padding</span>
+                                <span id="padding-value" class="text-[10px] font-mono text-slate-400">32px</span>
                             </div>
                             <input type="range" id="padding-slider" min="16" max="80" value="32" class="slider-dark w-full">
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
-                                <span class="text-xs text-slate-500">Radius</span>
-                                <span id="radius-value" class="text-xs font-mono text-slate-400">12px</span>
+                                <span class="text-[10px] text-slate-500">Radius</span>
+                                <span id="radius-value" class="text-[10px] font-mono text-slate-400">12px</span>
                             </div>
-                            <input type="range" id="radius-slider" min="0" max="24" value="12" class="slider-dark w-full">
+                            <input type="range" id="radius-slider" min="0" max="32" value="12" class="slider-dark w-full">
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
-                                <span class="text-xs text-slate-500">Font Size</span>
-                                <span id="fontsize-value" class="text-xs font-mono text-slate-400">14px</span>
+                                <span class="text-[10px] text-slate-500">Font Size</span>
+                                <span id="fontsize-value" class="text-[10px] font-mono text-slate-400">14px</span>
                             </div>
-                            <input type="range" id="fontsize-slider" min="10" max="20" value="14" class="slider-dark w-full">
+                            <input type="range" id="fontsize-slider" min="10" max="24" value="14" class="slider-dark w-full">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Annotations -->
+                <div class="glass-panel rounded-xl p-3">
+                    <span class="label-text">Annotations</span>
+                    <div class="section-card mt-2">
+                        <div class="label-text mb-2 text-[9px]">Highlight Lines (e.g., 1,3-5,8)</div>
+                        <input type="text" id="highlight-lines" class="highlight-input w-full" placeholder="1, 3-5, 8">
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="text-[10px] text-slate-500">Color:</span>
+                            <input type="color" id="highlight-color" class="color-input" value="#3b82f6">
+                            <span class="text-[10px] text-slate-500 ml-2">Opacity:</span>
+                            <input type="range" id="highlight-opacity" min="10" max="50" value="20" class="slider-dark flex-1">
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Main Preview Area -->
-            <div class="lg:col-span-9">
+            <div class="xl:col-span-9">
                 <div class="glass-panel rounded-xl p-4">
-                    <!-- Preview Header -->
-                    <div class="flex items-center justify-between mb-4">
+                    <!-- Header -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                         <div class="flex items-center gap-3">
                             <span class="label-text">Preview</span>
                             <span id="size-indicator" class="stat-badge bg-emerald-500/20 text-emerald-400">
                                 <i class="fas fa-circle text-[6px]"></i> Normal
                             </span>
+                            <div id="recording-indicator" class="recording-indicator hidden">
+                                <div class="recording-dot"></div>
+                                Recording...
+                            </div>
                         </div>
+
+                        <!-- Social Presets -->
+                        <div class="flex items-center gap-1">
+                            <span class="text-[10px] text-slate-500 mr-1">Quick:</span>
+                            <button class="btn-action btn-social btn-ghost" data-social="twitter">
+                                <i class="fab fa-twitter"></i> Twitter
+                            </button>
+                            <button class="btn-action btn-social btn-ghost" data-social="linkedin">
+                                <i class="fab fa-linkedin"></i> LinkedIn
+                            </button>
+                            <button class="btn-action btn-social btn-ghost" data-social="discord">
+                                <i class="fab fa-discord"></i> Discord
+                            </button>
+                            <button class="btn-action btn-social btn-ghost" data-social="instagram">
+                                <i class="fab fa-instagram"></i> IG
+                            </button>
+                        </div>
+
+                        <!-- Export Buttons -->
                         <div class="flex items-center gap-2">
                             <button id="copy-btn" class="btn-action btn-ghost">
-                                <i class="fas fa-copy"></i>
-                                Copy
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <button id="svg-btn" class="btn-action btn-ghost">
+                                <i class="fas fa-vector-square"></i> SVG
+                            </button>
+                            <button id="gif-btn" class="btn-action btn-ghost">
+                                <i class="fas fa-film"></i> GIF
                             </button>
                             <button id="download-btn" class="btn-action btn-primary">
-                                <i class="fas fa-download"></i>
-                                Download PNG
+                                <i class="fas fa-download"></i> PNG
                             </button>
                         </div>
                     </div>
 
                     <!-- Preview Canvas -->
-                    <div class="preview-canvas">
+                    <div class="preview-canvas" id="preview-canvas">
                         <div id="export-wrapper" class="flex justify-center">
                             <div id="code-preview" class="code-preview overflow-hidden inline-block" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 32px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);">
-                                <!-- Window Chrome -->
-                                <div id="window-chrome" class="window-chrome rounded-t-lg" style="background: rgba(0,0,0,0.25);">
+                                <!-- macOS Chrome -->
+                                <div id="window-chrome-macos" class="window-chrome rounded-t-lg" style="background: rgba(0,0,0,0.25);">
                                     <div class="window-dot red"></div>
                                     <div class="window-dot yellow"></div>
                                     <div class="window-dot green"></div>
                                     <span id="window-title" class="window-title text-white"></span>
                                     <div style="width: 52px;"></div>
                                 </div>
+
+                                <!-- Windows Chrome -->
+                                <div id="window-chrome-windows" class="windows-chrome rounded-t-lg hidden" style="background: rgba(0,0,0,0.25);">
+                                    <div class="windows-title text-white">
+                                        <i class="fas fa-code text-xs opacity-50"></i>
+                                        <span id="window-title-win"></span>
+                                    </div>
+                                    <div class="windows-controls text-white">
+                                        <div class="windows-btn"><i class="fas fa-minus text-xs"></i></div>
+                                        <div class="windows-btn"><i class="far fa-square text-xs"></i></div>
+                                        <div class="windows-btn close"><i class="fas fa-times text-xs"></i></div>
+                                    </div>
+                                </div>
+
+                                <!-- Linux Chrome -->
+                                <div id="window-chrome-linux" class="linux-chrome rounded-t-lg hidden" style="background: rgba(0,0,0,0.25);">
+                                    <div class="linux-title text-white" id="window-title-linux"></div>
+                                    <div class="linux-controls">
+                                        <div class="linux-btn bg-yellow-500/80"><i class="fas fa-minus text-[8px] text-yellow-900"></i></div>
+                                        <div class="linux-btn bg-green-500/80"><i class="fas fa-expand text-[8px] text-green-900"></i></div>
+                                        <div class="linux-btn bg-red-500/80"><i class="fas fa-times text-[8px] text-red-900"></i></div>
+                                    </div>
+                                </div>
+
+                                <!-- Minimal Chrome -->
+                                <div id="window-chrome-minimal" class="minimal-chrome rounded-t-lg hidden" style="background: rgba(0,0,0,0.15);"></div>
+
                                 <!-- Code Container -->
                                 <div id="code-container" class="flex" style="background: #282c34; border-radius: 0 0 8px 8px; padding: 16px;">
                                     <pre id="line-numbers" class="line-numbers text-gray-500 hidden"></pre>
                                     <pre class="flex-1 overflow-x-auto"><code id="highlighted-code" class="text-sm">// Paste your code to get started</code></pre>
                                 </div>
+
                                 <!-- Watermark -->
-                                <div id="watermark" class="text-right mt-2 hidden" style="opacity: 0.4; font-size: 10px; color: white;">
-                                    tar.copy
-                                </div>
+                                <div id="watermark" class="text-right mt-2 hidden" style="opacity: 0.4; font-size: 10px; color: white;">tar.copy</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Quick Tips -->
-                    <div class="mt-4 flex items-center justify-center gap-6 text-xs text-slate-500">
-                        <span><i class="fas fa-keyboard mr-1"></i> Paste code to begin</span>
-                        <span><i class="fas fa-palette mr-1"></i> Customize appearance</span>
-                        <span><i class="fas fa-download mr-1"></i> Export as PNG</span>
+                    <!-- Tips -->
+                    <div class="mt-3 flex items-center justify-center gap-6 text-[10px] text-slate-500">
+                        <span><i class="fas fa-lightbulb mr-1 text-yellow-500/50"></i> Use highlight lines for annotations</span>
+                        <span><i class="fas fa-magic mr-1 text-purple-500/50"></i> Social presets auto-optimize size</span>
+                        <span><i class="fas fa-film mr-1 text-pink-500/50"></i> GIF creates typing animation</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Footer -->
-        <footer class="mt-8 text-center">
-            <div class="flex items-center justify-center gap-2 text-sm text-slate-600">
-                <span class="font-mono text-slate-500">&lt;/&gt;</span>
-                <span>with</span>
-                <i class="fas fa-heart text-red-500/50"></i>
-                <span>for developers</span>
+        <footer class="mt-6 text-center">
+            <div class="flex items-center justify-center gap-2 text-xs text-slate-600">
+                <span class="font-mono">&lt;/&gt;</span> with <i class="fas fa-heart text-red-500/50"></i> for developers
             </div>
         </footer>
+    </div>
+
+    <!-- GIF Modal -->
+    <div id="gif-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-lg font-semibold text-white mb-4">
+                <i class="fas fa-film mr-2 text-pink-400"></i>Create Typing Animation GIF
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="label-text block mb-2">Typing Speed</label>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="gif-speed" min="10" max="100" value="50" class="slider-dark flex-1">
+                        <span id="gif-speed-value" class="text-sm font-mono text-slate-400">50ms</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="label-text block mb-2">Final Pause (ms)</label>
+                    <input type="number" id="gif-pause" value="2000" class="input-dark w-full p-2 rounded-lg">
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="gif-cursor" checked class="rounded">
+                    <label for="gif-cursor" class="text-sm text-slate-300">Show blinking cursor</label>
+                </div>
+                <div id="gif-progress" class="hidden">
+                    <div class="flex items-center gap-2 text-sm text-slate-400">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span id="gif-progress-text">Generating GIF...</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-700 rounded-full mt-2 overflow-hidden">
+                        <div id="gif-progress-bar" class="h-full bg-blue-500 transition-all" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-6">
+                <button id="gif-cancel" class="btn-action btn-ghost">Cancel</button>
+                <button id="gif-generate" class="btn-action btn-primary">
+                    <i class="fas fa-magic mr-1"></i> Generate GIF
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Toast -->
     <div id="toast" class="toast">
         <i class="fas fa-check-circle mr-2"></i>
-        <span id="toast-message">Copied to clipboard!</span>
+        <span id="toast-message">Copied!</span>
     </div>
 
     <script>
@@ -538,29 +543,56 @@
             const highlightedCode = document.getElementById('highlighted-code');
             const codePreview = document.getElementById('code-preview');
             const codeContainer = document.getElementById('code-container');
-            const windowChrome = document.getElementById('window-chrome');
-            const windowTitle = document.getElementById('window-title');
             const lineNumbers = document.getElementById('line-numbers');
             const watermark = document.getElementById('watermark');
             const downloadBtn = document.getElementById('download-btn');
             const copyBtn = document.getElementById('copy-btn');
+            const svgBtn = document.getElementById('svg-btn');
+            const gifBtn = document.getElementById('gif-btn');
             const clearBtn = document.getElementById('clear-btn');
             const paddingSlider = document.getElementById('padding-slider');
             const radiusSlider = document.getElementById('radius-slider');
             const fontsizeSlider = document.getElementById('fontsize-slider');
+            const widthSlider = document.getElementById('width-slider');
             const themeChips = document.querySelectorAll('.theme-chip');
             const gradientBtns = document.querySelectorAll('.gradient-btn');
+            const widthBtns = document.querySelectorAll('[data-width]');
+            const windowBtns = document.querySelectorAll('[data-window]');
+            const socialBtns = document.querySelectorAll('[data-social]');
             const exportJsonBtn = document.getElementById('export-json-btn');
             const importJsonBtn = document.getElementById('import-json-btn');
             const sizeIndicator = document.getElementById('size-indicator');
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
+            const highlightLinesInput = document.getElementById('highlight-lines');
+            const highlightColor = document.getElementById('highlight-color');
+            const highlightOpacity = document.getElementById('highlight-opacity');
+            const customBgColor = document.getElementById('custom-bg-color');
+            const customBgColor2 = document.getElementById('custom-bg-color2');
 
             // Toggles
-            const toggleChrome = document.getElementById('toggle-chrome');
             const toggleLines = document.getElementById('toggle-lines');
             const toggleShadow = document.getElementById('toggle-shadow');
             const toggleWatermark = document.getElementById('toggle-watermark');
+
+            // Window chrome elements
+            const chromeMacos = document.getElementById('window-chrome-macos');
+            const chromeWindows = document.getElementById('window-chrome-windows');
+            const chromeLinux = document.getElementById('window-chrome-linux');
+            const chromeMinimal = document.getElementById('window-chrome-minimal');
+            const windowTitle = document.getElementById('window-title');
+            const windowTitleWin = document.getElementById('window-title-win');
+            const windowTitleLinux = document.getElementById('window-title-linux');
+
+            // GIF Modal
+            const gifModal = document.getElementById('gif-modal');
+            const gifCancel = document.getElementById('gif-cancel');
+            const gifGenerate = document.getElementById('gif-generate');
+            const gifSpeed = document.getElementById('gif-speed');
+            const gifSpeedValue = document.getElementById('gif-speed-value');
+            const gifProgress = document.getElementById('gif-progress');
+            const gifProgressBar = document.getElementById('gif-progress-bar');
+            const gifProgressText = document.getElementById('gif-progress-text');
 
             // Settings
             let currentTheme = 'atom-one-dark';
@@ -568,11 +600,13 @@
             let currentPadding = 32;
             let currentRadius = 12;
             let currentFontSize = 14;
+            let currentWidth = 'auto';
+            let currentWindowStyle = 'macos';
             let currentSize = 'normal';
-            let showChrome = true;
             let showLines = false;
             let showShadow = true;
             let showWatermark = false;
+            let highlightedLineNumbers = [];
 
             // Backgrounds
             const backgrounds = {
@@ -583,9 +617,12 @@
                 'gradient-5': 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
                 'gradient-6': 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
                 'gradient-7': 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+                'gradient-8': 'linear-gradient(135deg, #667eea 0%, #f093fb 100%)',
+                'gradient-9': 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
                 'solid-dark': '#1e293b',
                 'solid-light': '#f1f5f9',
-                'transparent': 'transparent'
+                'transparent': 'transparent',
+                'custom': ''
             };
 
             // Theme backgrounds
@@ -595,7 +632,20 @@
                 'github-dark': '#0d1117',
                 'github': '#ffffff',
                 'monokai': '#272822',
-                'dracula': '#282a36'
+                'dracula': '#282a36',
+                'nord': '#2e3440',
+                'tokyo-night-dark': '#1a1b26',
+                'solarized-dark': '#002b36',
+                'night-owl': '#011627',
+                'vs2015': '#1e1e1e'
+            };
+
+            // Social presets
+            const socialPresets = {
+                twitter: { width: 1200, padding: 48, fontSize: 16 },
+                linkedin: { width: 1200, padding: 56, fontSize: 16 },
+                discord: { width: 800, padding: 32, fontSize: 14 },
+                instagram: { width: 1080, padding: 64, fontSize: 18 }
             };
 
             // Init
@@ -603,19 +653,18 @@
 
             function detectLanguage(code) {
                 if (!code) return 'plaintext';
-                if (code.includes('<?php')) return 'php';
-                if (code.includes('def ') && code.includes(':')) return 'python';
-                if (code.includes('fn ') && code.includes('->')) return 'rust';
-                if (code.includes('func ') && code.includes('package ')) return 'go';
-                if (code.includes('interface ') && (code.includes(': ') || code.includes('<'))) return 'typescript';
-                if (code.includes('function ') || code.includes('=>') || code.includes('const ') || code.includes('let ')) return 'javascript';
-                if (code.includes('public class ') || code.includes('System.out')) return 'java';
-                if (code.includes('namespace ') || code.includes('Console.')) return 'csharp';
-                if (code.includes('<html') || code.includes('<div') || code.includes('<!DOCTYPE')) return 'html';
-                if (code.includes('SELECT ') || code.includes('FROM ')) return 'sql';
-                if (code.includes('#include ') || code.includes('std::')) return 'cpp';
-                if (code.includes('#!/bin/bash')) return 'bash';
-                if (code.trim().startsWith('{') || code.trim().startsWith('[')) return 'json';
+                const patterns = [
+                    [/\<\?php/, 'php'], [/^import .+ from ['"]/, 'javascript'], [/^from .+ import/, 'python'],
+                    [/fn .+\(.*\) ->/, 'rust'], [/func .+\(.*\) {/, 'go'], [/interface .+\{/, 'typescript'],
+                    [/^function |const .+ = |let .+ = |=\>/, 'javascript'], [/public class .+\{/, 'java'],
+                    [/namespace .+;|Console\./, 'csharp'], [/\<html|\<div|\<\!DOCTYPE/, 'html'],
+                    [/SELECT .+ FROM|INSERT INTO/, 'sql'], [/#include|std::/, 'cpp'],
+                    [/^#!\/bin\/bash/, 'bash'], [/^\{|\^\[/, 'json'], [/^def .+:/, 'python'],
+                    [/^package main/, 'go'], [/^use |^mod |impl /, 'rust']
+                ];
+                for (const [pattern, lang] of patterns) {
+                    if (pattern.test(code)) return lang;
+                }
                 return 'plaintext';
             }
 
@@ -633,18 +682,55 @@
                 const label = size === 'large+' ? 'Large+' : size.charAt(0).toUpperCase() + size.slice(1);
                 sizeIndicator.innerHTML = `<i class="fas fa-circle text-[6px]"></i> ${label}`;
                 sizeIndicator.className = 'stat-badge';
-                if (size === 'normal') {
-                    sizeIndicator.classList.add('bg-emerald-500/20', 'text-emerald-400');
-                } else if (size === 'large') {
-                    sizeIndicator.classList.add('bg-amber-500/20', 'text-amber-400');
-                } else {
-                    sizeIndicator.classList.add('bg-red-500/20', 'text-red-400');
+                const colors = { normal: ['bg-emerald-500/20', 'text-emerald-400'], large: ['bg-amber-500/20', 'text-amber-400'], 'large+': ['bg-red-500/20', 'text-red-400'] };
+                sizeIndicator.classList.add(...colors[size]);
+            }
+
+            function parseHighlightLines(input) {
+                if (!input.trim()) return [];
+                const lines = [];
+                const parts = input.split(',').map(p => p.trim());
+                for (const part of parts) {
+                    if (part.includes('-')) {
+                        const [start, end] = part.split('-').map(Number);
+                        for (let i = start; i <= end; i++) lines.push(i);
+                    } else {
+                        lines.push(parseInt(part));
+                    }
                 }
+                return lines.filter(n => !isNaN(n));
             }
 
             function generateLineNumbers(code) {
-                const lines = code.split('\n').length;
-                return Array.from({ length: lines }, (_, i) => i + 1).join('\n');
+                const lines = code.split('\n');
+                const color = highlightColor.value;
+                const opacity = highlightOpacity.value / 100;
+                return lines.map((_, i) => {
+                    const lineNum = i + 1;
+                    const isHighlighted = highlightedLineNumbers.includes(lineNum);
+                    if (isHighlighted) {
+                        return `<span class="line-highlight" style="background: ${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')}">${lineNum}</span>`;
+                    }
+                    return lineNum;
+                }).join('\n');
+            }
+
+            function generateHighlightedCode(code, language) {
+                const lines = code.split('\n');
+                const color = highlightColor.value;
+                const opacity = highlightOpacity.value / 100;
+
+                const highlightedLines = lines.map((line, i) => {
+                    const lineNum = i + 1;
+                    const isHighlighted = highlightedLineNumbers.includes(lineNum);
+                    const escapedLine = line.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    if (isHighlighted) {
+                        return `<span class="line-highlight" style="background: ${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')}; display: block; margin: 0 -16px; padding: 0 16px;">${escapedLine || ' '}</span>`;
+                    }
+                    return escapedLine || ' ';
+                }).join('\n');
+
+                return highlightedLines;
             }
 
             function updatePreview() {
@@ -652,114 +738,107 @@
                 const language = languageSelect.value === 'auto' ? detectLanguage(code) : languageSelect.value;
 
                 updateSizeIndicator(detectSnippetSize(code));
+                highlightedLineNumbers = parseHighlightLines(highlightLinesInput.value);
 
                 highlightedCode.className = `language-${language}`;
                 highlightedCode.textContent = code || '// Paste your code to get started';
                 hljs.highlightElement(highlightedCode);
 
-                lineNumbers.textContent = generateLineNumbers(code || '// Paste your code to get started');
-                windowTitle.textContent = filenameInput.value || '';
+                // Apply line highlights after syntax highlighting
+                if (highlightedLineNumbers.length > 0) {
+                    const color = highlightColor.value;
+                    const opacity = highlightOpacity.value / 100;
+                    const lines = highlightedCode.innerHTML.split('\n');
+                    highlightedCode.innerHTML = lines.map((line, i) => {
+                        const lineNum = i + 1;
+                        if (highlightedLineNumbers.includes(lineNum)) {
+                            return `<span style="background: ${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')}; display: block; margin: 0 -16px; padding: 0 16px;">${line || ' '}</span>`;
+                        }
+                        return line;
+                    }).join('\n');
+                }
+
+                lineNumbers.innerHTML = generateLineNumbers(code || '// Paste your code to get started');
+
+                const filename = filenameInput.value || '';
+                windowTitle.textContent = filename;
+                windowTitleWin.textContent = filename;
+                windowTitleLinux.textContent = filename;
 
                 updateStyling();
             }
 
             function updateStyling() {
-                const bgValue = backgrounds[currentBackground];
+                // Background
+                let bgValue;
+                if (currentBackground === 'custom') {
+                    bgValue = `linear-gradient(135deg, ${customBgColor.value} 0%, ${customBgColor2.value} 100%)`;
+                } else {
+                    bgValue = backgrounds[currentBackground];
+                }
                 codePreview.style.background = currentBackground === 'transparent' ? 'transparent' : bgValue;
 
+                // Width
+                if (currentWidth === 'auto') {
+                    codePreview.style.width = 'auto';
+                    codePreview.style.minWidth = '300px';
+                    codePreview.style.maxWidth = '100%';
+                    document.getElementById('width-value').textContent = 'Auto';
+                } else {
+                    codePreview.style.width = currentWidth + 'px';
+                    codePreview.style.minWidth = 'unset';
+                    codePreview.style.maxWidth = 'unset';
+                    document.getElementById('width-value').textContent = currentWidth + 'px';
+                }
+
+                // Padding, radius, font
                 codePreview.style.padding = `${currentPadding}px`;
                 document.getElementById('padding-value').textContent = `${currentPadding}px`;
-
                 codePreview.style.borderRadius = `${currentRadius}px`;
-                const innerRadius = Math.max(currentRadius - 4, 0);
-                codeContainer.style.borderRadius = showChrome ? `0 0 ${innerRadius}px ${innerRadius}px` : `${innerRadius}px`;
-                windowChrome.style.borderRadius = `${innerRadius}px ${innerRadius}px 0 0`;
                 document.getElementById('radius-value').textContent = `${currentRadius}px`;
-
                 highlightedCode.style.fontSize = `${currentFontSize}px`;
                 lineNumbers.style.fontSize = `${currentFontSize}px`;
                 highlightedCode.style.lineHeight = '1.6';
                 lineNumbers.style.lineHeight = '1.6';
                 document.getElementById('fontsize-value').textContent = `${currentFontSize}px`;
 
+                // Shadow
                 codePreview.style.boxShadow = showShadow ? '0 25px 50px -12px rgba(0, 0, 0, 0.4)' : 'none';
-                windowChrome.style.display = showChrome ? 'flex' : 'none';
+
+                // Window style
+                const innerRadius = Math.max(currentRadius - 4, 0);
+                [chromeMacos, chromeWindows, chromeLinux, chromeMinimal].forEach(el => el.classList.add('hidden'));
+
+                if (currentWindowStyle === 'macos') {
+                    chromeMacos.classList.remove('hidden');
+                    chromeMacos.style.borderRadius = `${innerRadius}px ${innerRadius}px 0 0`;
+                    codeContainer.style.borderRadius = `0 0 ${innerRadius}px ${innerRadius}px`;
+                } else if (currentWindowStyle === 'windows') {
+                    chromeWindows.classList.remove('hidden');
+                    chromeWindows.style.borderRadius = `${innerRadius}px ${innerRadius}px 0 0`;
+                    codeContainer.style.borderRadius = `0 0 ${innerRadius}px ${innerRadius}px`;
+                } else if (currentWindowStyle === 'linux') {
+                    chromeLinux.classList.remove('hidden');
+                    chromeLinux.style.borderRadius = `${innerRadius}px ${innerRadius}px 0 0`;
+                    codeContainer.style.borderRadius = `0 0 ${innerRadius}px ${innerRadius}px`;
+                } else if (currentWindowStyle === 'minimal') {
+                    chromeMinimal.classList.remove('hidden');
+                    chromeMinimal.style.borderRadius = `${innerRadius}px ${innerRadius}px 0 0`;
+                    codeContainer.style.borderRadius = `0 0 ${innerRadius}px ${innerRadius}px`;
+                } else {
+                    codeContainer.style.borderRadius = `${innerRadius}px`;
+                }
+
+                // Line numbers & watermark
                 lineNumbers.style.display = showLines ? 'block' : 'none';
                 watermark.style.display = showWatermark ? 'block' : 'none';
                 codeContainer.style.background = themeBackgrounds[currentTheme] || '#282c34';
             }
 
-            function exportAsJson() {
-                const snippet = {
-                    version: '2.0',
-                    code: codeInput.value,
-                    filename: filenameInput.value,
-                    language: languageSelect.value,
-                    theme: currentTheme,
-                    background: currentBackground,
-                    padding: currentPadding,
-                    borderRadius: currentRadius,
-                    fontSize: currentFontSize,
-                    showChrome, showLineNumbers: showLines, showShadow, showWatermark,
-                    size: currentSize,
-                    exportedAt: new Date().toISOString()
-                };
-                const blob = new Blob([JSON.stringify(snippet, null, 2)], { type: 'application/json' });
-                const link = document.createElement('a');
-                link.download = `snippet-${Date.now()}.json`;
-                link.href = URL.createObjectURL(blob);
-                link.click();
-                URL.revokeObjectURL(link.href);
-                showToast('Exported as JSON!');
-            }
-
-            function importFromJson() {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.json';
-                input.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        try {
-                            const s = JSON.parse(event.target.result);
-                            if (typeof s.code !== 'string') throw new Error('Invalid JSON');
-
-                            codeInput.value = s.code || '';
-                            filenameInput.value = s.filename || '';
-                            if (s.language) languageSelect.value = s.language;
-                            if (s.theme) {
-                                currentTheme = s.theme;
-                                themeChips.forEach(c => c.classList.toggle('active', c.dataset.theme === s.theme));
-                                loadTheme(s.theme);
-                            }
-                            if (s.background) {
-                                currentBackground = s.background;
-                                gradientBtns.forEach(b => b.classList.toggle('active', b.dataset.bg === s.background));
-                            }
-                            if (s.padding) { currentPadding = s.padding; paddingSlider.value = s.padding; }
-                            if (s.borderRadius !== undefined) { currentRadius = s.borderRadius; radiusSlider.value = s.borderRadius; }
-                            if (s.fontSize) { currentFontSize = s.fontSize; fontsizeSlider.value = s.fontSize; }
-                            if (s.showChrome !== undefined) { showChrome = s.showChrome; toggleChrome.classList.toggle('active', showChrome); }
-                            if (s.showLineNumbers !== undefined) { showLines = s.showLineNumbers; toggleLines.classList.toggle('active', showLines); }
-                            if (s.showShadow !== undefined) { showShadow = s.showShadow; toggleShadow.classList.toggle('active', showShadow); }
-                            if (s.showWatermark !== undefined) { showWatermark = s.showWatermark; toggleWatermark.classList.toggle('active', showWatermark); }
-                            updatePreview();
-                            showToast('Snippet imported!');
-                        } catch (err) {
-                            showToast('Import failed: ' + err.message);
-                        }
-                    };
-                    reader.readAsText(file);
-                };
-                input.click();
-            }
-
             function loadTheme(theme) {
                 const link = document.createElement('link');
                 link.rel = 'stylesheet';
-                link.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/${theme}.min.css`;
+                link.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${theme}.min.css`;
                 link.title = theme;
                 const old = document.querySelector('link[title]');
                 if (old) document.head.removeChild(old);
@@ -770,45 +849,190 @@
                 return currentSize === 'large+' ? 3 : currentSize === 'large' ? 2.5 : 2;
             }
 
-            function downloadAsPNG() {
+            async function downloadAsPNG() {
                 const wrapper = document.getElementById('export-wrapper');
-                html2canvas(wrapper, {
-                    scale: getExportScale(),
-                    backgroundColor: null,
-                    useCORS: true,
-                    logging: false,
-                    allowTaint: true
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    const filename = filenameInput.value ? filenameInput.value.replace(/\.[^/.]+$/, '') : 'code-screenshot';
-                    link.download = `${filename}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    showToast('Downloaded!');
-                });
+                const canvas = await html2canvas(wrapper, { scale: getExportScale(), backgroundColor: null, useCORS: true, logging: false, allowTaint: true });
+                const link = document.createElement('a');
+                link.download = `${filenameInput.value?.replace(/\.[^/.]+$/, '') || 'code-screenshot'}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast('Downloaded PNG!');
             }
 
             async function copyToClipboard() {
                 const wrapper = document.getElementById('export-wrapper');
                 try {
-                    const canvas = await html2canvas(wrapper, {
-                        scale: getExportScale(),
-                        backgroundColor: null,
-                        useCORS: true,
-                        logging: false,
-                        allowTaint: true
-                    });
+                    const canvas = await html2canvas(wrapper, { scale: getExportScale(), backgroundColor: null, useCORS: true, logging: false, allowTaint: true });
                     canvas.toBlob(async (blob) => {
-                        try {
-                            await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-                            showToast('Copied to clipboard!');
-                        } catch (err) {
-                            showToast('Copy failed');
-                        }
+                        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                        showToast('Copied to clipboard!');
                     });
                 } catch (err) {
                     showToast('Copy failed');
                 }
+            }
+
+            async function exportAsSVG() {
+                const wrapper = document.getElementById('export-wrapper');
+                const canvas = await html2canvas(wrapper, { scale: 2, backgroundColor: null, useCORS: true, logging: false });
+
+                const svgNS = 'http://www.w3.org/2000/svg';
+                const svg = document.createElementNS(svgNS, 'svg');
+                svg.setAttribute('width', canvas.width);
+                svg.setAttribute('height', canvas.height);
+                svg.setAttribute('xmlns', svgNS);
+                svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+
+                const image = document.createElementNS(svgNS, 'image');
+                image.setAttribute('width', canvas.width);
+                image.setAttribute('height', canvas.height);
+                image.setAttribute('href', canvas.toDataURL('image/png'));
+                svg.appendChild(image);
+
+                const svgData = new XMLSerializer().serializeToString(svg);
+                const blob = new Blob([svgData], { type: 'image/svg+xml' });
+                const link = document.createElement('a');
+                link.download = `${filenameInput.value?.replace(/\.[^/.]+$/, '') || 'code-screenshot'}.svg`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+                showToast('Downloaded SVG!');
+            }
+
+            async function generateGIF() {
+                const code = codeInput.value;
+                if (!code) {
+                    showToast('Enter code first!');
+                    return;
+                }
+
+                gifProgress.classList.remove('hidden');
+                gifGenerate.disabled = true;
+
+                const speed = parseInt(gifSpeed.value);
+                const pause = parseInt(document.getElementById('gif-pause').value);
+                const showCursor = document.getElementById('gif-cursor').checked;
+                const wrapper = document.getElementById('export-wrapper');
+
+                const gif = new GIF({
+                    workers: 2,
+                    quality: 10,
+                    workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
+                });
+
+                const chars = code.split('');
+                const totalFrames = chars.length + Math.ceil(pause / speed);
+                let currentFrame = 0;
+
+                // Generate frames
+                for (let i = 0; i <= chars.length; i++) {
+                    const partialCode = chars.slice(0, i).join('') + (showCursor && i < chars.length ? '|' : '');
+                    highlightedCode.textContent = partialCode || ' ';
+
+                    const language = languageSelect.value === 'auto' ? detectLanguage(code) : languageSelect.value;
+                    highlightedCode.className = `language-${language}`;
+                    hljs.highlightElement(highlightedCode);
+                    lineNumbers.innerHTML = generateLineNumbers(partialCode || ' ');
+
+                    await new Promise(r => setTimeout(r, 10));
+
+                    try {
+                        const canvas = await html2canvas(wrapper, { scale: 1.5, backgroundColor: null, useCORS: true, logging: false });
+                        const delay = i === chars.length ? pause : speed;
+                        gif.addFrame(canvas, { delay, copy: true });
+                    } catch (e) {
+                        console.error('Frame error:', e);
+                    }
+
+                    currentFrame++;
+                    const progress = Math.round((currentFrame / totalFrames) * 100);
+                    gifProgressBar.style.width = `${progress}%`;
+                    gifProgressText.textContent = `Generating... ${progress}%`;
+                }
+
+                // Restore full code
+                updatePreview();
+
+                gif.on('finished', (blob) => {
+                    const link = document.createElement('a');
+                    link.download = `${filenameInput.value?.replace(/\.[^/.]+$/, '') || 'code-animation'}.gif`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+
+                    gifModal.classList.remove('show');
+                    gifProgress.classList.add('hidden');
+                    gifGenerate.disabled = false;
+                    gifProgressBar.style.width = '0%';
+                    showToast('GIF created!');
+                });
+
+                gif.render();
+            }
+
+            function exportAsJson() {
+                const snippet = {
+                    version: '3.0',
+                    code: codeInput.value,
+                    filename: filenameInput.value,
+                    language: languageSelect.value,
+                    theme: currentTheme,
+                    background: currentBackground,
+                    padding: currentPadding,
+                    borderRadius: currentRadius,
+                    fontSize: currentFontSize,
+                    width: currentWidth,
+                    windowStyle: currentWindowStyle,
+                    showLineNumbers: showLines,
+                    showShadow,
+                    showWatermark,
+                    highlightLines: highlightLinesInput.value,
+                    highlightColor: highlightColor.value,
+                    customColors: [customBgColor.value, customBgColor2.value],
+                    exportedAt: new Date().toISOString()
+                };
+                const blob = new Blob([JSON.stringify(snippet, null, 2)], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.download = `snippet-${Date.now()}.json`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                showToast('Exported JSON!');
+            }
+
+            function importFromJson() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const s = JSON.parse(event.target.result);
+                            codeInput.value = s.code || '';
+                            filenameInput.value = s.filename || '';
+                            if (s.language) languageSelect.value = s.language;
+                            if (s.theme) { currentTheme = s.theme; themeChips.forEach(c => c.classList.toggle('active', c.dataset.theme === s.theme)); loadTheme(s.theme); }
+                            if (s.background) { currentBackground = s.background; gradientBtns.forEach(b => b.classList.toggle('active', b.dataset.bg === s.background)); }
+                            if (s.padding) { currentPadding = s.padding; paddingSlider.value = s.padding; }
+                            if (s.borderRadius !== undefined) { currentRadius = s.borderRadius; radiusSlider.value = s.borderRadius; }
+                            if (s.fontSize) { currentFontSize = s.fontSize; fontsizeSlider.value = s.fontSize; }
+                            if (s.width) { currentWidth = s.width; widthSlider.value = s.width === 'auto' ? 600 : s.width; widthBtns.forEach(b => b.classList.toggle('active', b.dataset.width === String(s.width))); }
+                            if (s.windowStyle) { currentWindowStyle = s.windowStyle; windowBtns.forEach(b => b.classList.toggle('active', b.dataset.window === s.windowStyle)); }
+                            if (s.showLineNumbers !== undefined) { showLines = s.showLineNumbers; toggleLines.classList.toggle('active', showLines); }
+                            if (s.showShadow !== undefined) { showShadow = s.showShadow; toggleShadow.classList.toggle('active', showShadow); }
+                            if (s.showWatermark !== undefined) { showWatermark = s.showWatermark; toggleWatermark.classList.toggle('active', showWatermark); }
+                            if (s.highlightLines) highlightLinesInput.value = s.highlightLines;
+                            if (s.highlightColor) highlightColor.value = s.highlightColor;
+                            if (s.customColors) { customBgColor.value = s.customColors[0]; customBgColor2.value = s.customColors[1]; }
+                            updatePreview();
+                            showToast('Imported!');
+                        } catch (err) {
+                            showToast('Import failed');
+                        }
+                    };
+                    reader.readAsText(e.target.files[0]);
+                };
+                input.click();
             }
 
             function showToast(message) {
@@ -821,19 +1045,16 @@
             codeInput.addEventListener('input', updatePreview);
             languageSelect.addEventListener('change', updatePreview);
             filenameInput.addEventListener('input', updatePreview);
+            highlightLinesInput.addEventListener('input', updatePreview);
+            highlightColor.addEventListener('input', updatePreview);
+            highlightOpacity.addEventListener('input', updatePreview);
+            customBgColor.addEventListener('input', () => { currentBackground = 'custom'; gradientBtns.forEach(b => b.classList.remove('active')); updateStyling(); });
+            customBgColor2.addEventListener('input', () => { currentBackground = 'custom'; gradientBtns.forEach(b => b.classList.remove('active')); updateStyling(); });
 
-            paddingSlider.addEventListener('input', function() {
-                currentPadding = parseInt(this.value);
-                updateStyling();
-            });
-            radiusSlider.addEventListener('input', function() {
-                currentRadius = parseInt(this.value);
-                updateStyling();
-            });
-            fontsizeSlider.addEventListener('input', function() {
-                currentFontSize = parseInt(this.value);
-                updateStyling();
-            });
+            paddingSlider.addEventListener('input', function() { currentPadding = parseInt(this.value); updateStyling(); });
+            radiusSlider.addEventListener('input', function() { currentRadius = parseInt(this.value); updateStyling(); });
+            fontsizeSlider.addEventListener('input', function() { currentFontSize = parseInt(this.value); updateStyling(); });
+            widthSlider.addEventListener('input', function() { currentWidth = parseInt(this.value); widthBtns.forEach(b => b.classList.remove('active')); updateStyling(); });
 
             themeChips.forEach(chip => {
                 chip.addEventListener('click', function() {
@@ -854,35 +1075,53 @@
                 });
             });
 
-            toggleChrome.addEventListener('click', function() {
-                showChrome = !showChrome;
-                this.classList.toggle('active', showChrome);
-                updateStyling();
+            widthBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    widthBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentWidth = this.dataset.width === 'auto' ? 'auto' : parseInt(this.dataset.width);
+                    if (currentWidth !== 'auto') widthSlider.value = currentWidth;
+                    updateStyling();
+                });
             });
-            toggleLines.addEventListener('click', function() {
-                showLines = !showLines;
-                this.classList.toggle('active', showLines);
-                updateStyling();
+
+            windowBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    windowBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentWindowStyle = this.dataset.window;
+                    updateStyling();
+                });
             });
-            toggleShadow.addEventListener('click', function() {
-                showShadow = !showShadow;
-                this.classList.toggle('active', showShadow);
-                updateStyling();
+
+            socialBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const preset = socialPresets[this.dataset.social];
+                    currentWidth = preset.width;
+                    currentPadding = preset.padding;
+                    currentFontSize = preset.fontSize;
+                    widthSlider.value = preset.width;
+                    paddingSlider.value = preset.padding;
+                    fontsizeSlider.value = preset.fontSize;
+                    widthBtns.forEach(b => b.classList.remove('active'));
+                    updateStyling();
+                    showToast(`Optimized for ${this.dataset.social}!`);
+                });
             });
-            toggleWatermark.addEventListener('click', function() {
-                showWatermark = !showWatermark;
-                this.classList.toggle('active', showWatermark);
-                updateStyling();
-            });
+
+            toggleLines.addEventListener('click', function() { showLines = !showLines; this.classList.toggle('active', showLines); updateStyling(); });
+            toggleShadow.addEventListener('click', function() { showShadow = !showShadow; this.classList.toggle('active', showShadow); updateStyling(); });
+            toggleWatermark.addEventListener('click', function() { showWatermark = !showWatermark; this.classList.toggle('active', showWatermark); updateStyling(); });
 
             downloadBtn.addEventListener('click', downloadAsPNG);
             copyBtn.addEventListener('click', copyToClipboard);
-            clearBtn.addEventListener('click', function() {
-                codeInput.value = '';
-                filenameInput.value = '';
-                updatePreview();
-            });
+            svgBtn.addEventListener('click', exportAsSVG);
+            gifBtn.addEventListener('click', () => gifModal.classList.add('show'));
+            gifCancel.addEventListener('click', () => gifModal.classList.remove('show'));
+            gifGenerate.addEventListener('click', generateGIF);
+            gifSpeed.addEventListener('input', function() { gifSpeedValue.textContent = this.value + 'ms'; });
 
+            clearBtn.addEventListener('click', function() { codeInput.value = ''; filenameInput.value = ''; highlightLinesInput.value = ''; updatePreview(); });
             exportJsonBtn.addEventListener('click', exportAsJson);
             importJsonBtn.addEventListener('click', importFromJson);
 
