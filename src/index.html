@@ -10,151 +10,523 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            850: '#172033',
+                            900: '#0f172a',
+                            950: '#0a0f1a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #475569 transparent;
+        }
+        *::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        *::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        *::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 3px;
+        }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 50%, #1e293b 100%);
+            min-height: 100vh;
+        }
         .code-input {
-            font-family: 'Fira Code', 'Courier New', monospace;
+            font-family: 'JetBrains Mono', monospace;
             tab-size: 2;
+            resize: none;
         }
         .code-preview {
-            font-family: 'Fira Code', 'Courier New', monospace;
+            font-family: 'JetBrains Mono', monospace;
             tab-size: 2;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .hljs {
             background: transparent !important;
             padding: 0 !important;
         }
-        .download-btn {
-            transition: all 0.2s ease;
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(71, 85, 105, 0.3);
         }
-        .download-btn:hover {
+        .window-chrome {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 8px;
+        }
+        .window-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .window-dot.red { background: #ff5f56; }
+        .window-dot.yellow { background: #ffbd2e; }
+        .window-dot.green { background: #27ca40; }
+        .window-title {
+            flex: 1;
+            text-align: center;
+            font-size: 13px;
+            opacity: 0.6;
+            font-weight: 500;
+        }
+        .line-numbers {
+            text-align: right;
+            padding-right: 16px;
+            user-select: none;
+            opacity: 0.4;
+            font-size: inherit;
+            line-height: inherit;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            background: #334155;
+            border-radius: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .toggle-switch.active {
+            background: #3b82f6;
+        }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .toggle-switch.active::after {
+            transform: translateX(18px);
+        }
+        .gradient-btn {
+            width: 100%;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.15s;
+            position: relative;
+        }
+        .gradient-btn:hover {
+            transform: scale(1.03);
+        }
+        .gradient-btn.active {
+            border-color: #3b82f6;
+        }
+        .gradient-btn.active::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+        }
+        .theme-chip {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+        .theme-chip:hover {
+            transform: translateY(-1px);
+        }
+        .theme-chip.active {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+        .btn-primary:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
         }
-        .theme-selector {
-            transition: all 0.2s ease;
+        .btn-ghost {
+            background: rgba(51, 65, 85, 0.5);
+            color: #94a3b8;
+            border: 1px solid rgba(71, 85, 105, 0.5);
         }
-        .theme-selector:hover {
-            transform: scale(1.05);
+        .btn-ghost:hover {
+            background: rgba(51, 65, 85, 0.8);
+            color: #e2e8f0;
         }
-        .theme-selector.active {
-            border: 2px solid #3b82f6;
-            transform: scale(1.05);
+        .slider-dark {
+            -webkit-appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: #334155;
+        }
+        .slider-dark::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
+        }
+        .preview-canvas {
+            background: repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 20px 20px;
+            border-radius: 12px;
+            padding: 32px;
+        }
+        .input-dark {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            color: #e2e8f0;
+            transition: all 0.15s;
+        }
+        .input-dark:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            outline: none;
+        }
+        .input-dark::placeholder {
+            color: #64748b;
+        }
+        .label-text {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+        }
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        .glow-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #3b82f6 50%, transparent 100%);
+            opacity: 0.5;
+        }
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .logo-glow {
+            animation: pulse-glow 3s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
+<body class="text-slate-300">
+    <!-- Background decoration -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="relative container mx-auto px-4 py-6 max-w-7xl">
         <!-- Header -->
-        <header class="flex flex-col items-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2 flex items-center">
-                <span class="bg-blue-500 text-white px-3 py-1 rounded-lg mr-2">tar</span>
-                <span class="text-gray-700">.copy</span>
-            </h1>
-            <p class="text-gray-600 text-lg">Transform your code into beautiful, shareable images</p>
+        <header class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-3">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">tar</span>
+                    <span class="text-2xl font-bold text-slate-400">.</span>
+                    <span class="text-2xl font-bold text-slate-300">copy</span>
+                </div>
+                <div class="hidden sm:block h-6 w-px bg-slate-700"></div>
+                <span class="hidden sm:block text-sm text-slate-500">Code Screenshots</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="import-json-btn" class="btn-action btn-ghost text-xs px-3 py-2">
+                    <i class="fas fa-file-import"></i>
+                    <span class="hidden sm:inline">Import</span>
+                </button>
+                <button id="export-json-btn" class="btn-action btn-ghost text-xs px-3 py-2">
+                    <i class="fas fa-file-export"></i>
+                    <span class="hidden sm:inline">Export</span>
+                </button>
+            </div>
         </header>
 
         <!-- Main Content -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Input Section -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-gray-800">Your Code</h2>
-                    <div class="flex space-x-2">
-                        <button id="clear-btn" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition">
-                            <i class="fas fa-trash-alt mr-1"></i> Clear
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Sidebar - Controls -->
+            <div class="lg:col-span-3 space-y-4">
+                <!-- Code Input Card -->
+                <div class="glass-panel rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="label-text">Code</span>
+                        <button id="clear-btn" class="text-xs text-slate-500 hover:text-slate-300 transition">
+                            <i class="fas fa-times mr-1"></i>Clear
                         </button>
                     </div>
+                    <textarea id="code-input" class="code-input input-dark w-full h-48 p-3 rounded-lg text-sm" placeholder="// Paste your code here..."></textarea>
                 </div>
-                <textarea id="code-input" class="code-input w-full h-96 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Paste your code here..."></textarea>
-                
-                <div class="mt-4">
-                    <label for="language-select" class="block text-sm font-medium text-gray-700 mb-1">Language</label>
-                    <select id="language-select" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                        <option value="auto">Auto-detect</option>
-                        <option value="javascript">JavaScript</option>
-                        <option value="python">Python</option>
-                        <option value="java">Java</option>
-                        <option value="csharp">C#</option>
-                        <option value="php">PHP</option>
-                        <option value="ruby">Ruby</option>
-                        <option value="go">Go</option>
-                        <option value="cpp">C++</option>
-                        <option value="html">HTML</option>
-                        <option value="css">CSS</option>
-                        <option value="sql">SQL</option>
-                        <option value="bash">Bash</option>
-                    </select>
+
+                <!-- Settings Card -->
+                <div class="glass-panel rounded-xl p-4 space-y-4">
+                    <!-- Language & Filename -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="label-text block mb-2">Language</label>
+                            <select id="language-select" class="input-dark w-full p-2 rounded-lg text-sm">
+                                <option value="auto">Auto</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="typescript">TypeScript</option>
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                                <option value="csharp">C#</option>
+                                <option value="php">PHP</option>
+                                <option value="ruby">Ruby</option>
+                                <option value="go">Go</option>
+                                <option value="rust">Rust</option>
+                                <option value="cpp">C++</option>
+                                <option value="html">HTML</option>
+                                <option value="css">CSS</option>
+                                <option value="sql">SQL</option>
+                                <option value="bash">Bash</option>
+                                <option value="json">JSON</option>
+                                <option value="yaml">YAML</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="label-text block mb-2">Filename</label>
+                            <input type="text" id="filename-input" class="input-dark w-full p-2 rounded-lg text-sm" placeholder="app.js">
+                        </div>
+                    </div>
+
+                    <div class="glow-line"></div>
+
+                    <!-- Theme -->
+                    <div>
+                        <label class="label-text block mb-2">Theme</label>
+                        <div class="flex flex-wrap gap-1.5">
+                            <button class="theme-chip active bg-slate-800 text-slate-200" data-theme="atom-one-dark">Atom</button>
+                            <button class="theme-chip bg-slate-100 text-slate-800" data-theme="atom-one-light">Light</button>
+                            <button class="theme-chip bg-slate-900 text-slate-200" data-theme="github-dark">GitHub</button>
+                            <button class="theme-chip bg-indigo-900 text-indigo-200" data-theme="monokai">Monokai</button>
+                            <button class="theme-chip bg-slate-800 text-purple-300" data-theme="dracula">Dracula</button>
+                        </div>
+                    </div>
+
+                    <div class="glow-line"></div>
+
+                    <!-- Background -->
+                    <div>
+                        <label class="label-text block mb-2">Background</label>
+                        <div class="grid grid-cols-5 gap-1.5">
+                            <div class="gradient-btn active" data-bg="gradient-1" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                            <div class="gradient-btn" data-bg="gradient-2" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                            <div class="gradient-btn" data-bg="gradient-3" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                            <div class="gradient-btn" data-bg="gradient-4" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                            <div class="gradient-btn" data-bg="gradient-5" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                            <div class="gradient-btn" data-bg="gradient-6" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
+                            <div class="gradient-btn" data-bg="gradient-7" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);"></div>
+                            <div class="gradient-btn" data-bg="solid-dark" style="background: #1e293b;"></div>
+                            <div class="gradient-btn" data-bg="solid-light" style="background: #f1f5f9;"></div>
+                            <div class="gradient-btn" data-bg="transparent" style="background: repeating-conic-gradient(#475569 0% 25%, #334155 0% 50%) 50% / 6px 6px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="glow-line"></div>
+
+                    <!-- Toggles -->
+                    <div class="space-y-2">
+                        <div class="control-row">
+                            <span class="text-sm text-slate-400">Window Controls</span>
+                            <div id="toggle-chrome" class="toggle-switch active"></div>
+                        </div>
+                        <div class="control-row">
+                            <span class="text-sm text-slate-400">Line Numbers</span>
+                            <div id="toggle-lines" class="toggle-switch"></div>
+                        </div>
+                        <div class="control-row">
+                            <span class="text-sm text-slate-400">Shadow</span>
+                            <div id="toggle-shadow" class="toggle-switch active"></div>
+                        </div>
+                        <div class="control-row">
+                            <span class="text-sm text-slate-400">Watermark</span>
+                            <div id="toggle-watermark" class="toggle-switch"></div>
+                        </div>
+                    </div>
+
+                    <div class="glow-line"></div>
+
+                    <!-- Sliders -->
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs text-slate-500">Padding</span>
+                                <span id="padding-value" class="text-xs font-mono text-slate-400">32px</span>
+                            </div>
+                            <input type="range" id="padding-slider" min="16" max="80" value="32" class="slider-dark w-full">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs text-slate-500">Radius</span>
+                                <span id="radius-value" class="text-xs font-mono text-slate-400">12px</span>
+                            </div>
+                            <input type="range" id="radius-slider" min="0" max="24" value="12" class="slider-dark w-full">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs text-slate-500">Font Size</span>
+                                <span id="fontsize-value" class="text-xs font-mono text-slate-400">14px</span>
+                            </div>
+                            <input type="range" id="fontsize-slider" min="10" max="20" value="14" class="slider-dark w-full">
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Preview Section -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-gray-800">Preview</h2>
-                    <button id="download-btn" class="download-btn px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center">
-                        <i class="fas fa-download mr-2"></i> Download PNG
-                    </button>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Theme</label>
-                    <div class="flex flex-wrap gap-2">
-                        <div class="theme-selector active" data-theme="atom-one-dark">
-                            <div class="w-12 h-8 rounded bg-gray-800 border-2 border-blue-500"></div>
-                            <span class="text-xs mt-1">Dark</span>
+            <!-- Main Preview Area -->
+            <div class="lg:col-span-9">
+                <div class="glass-panel rounded-xl p-4">
+                    <!-- Preview Header -->
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="label-text">Preview</span>
+                            <span id="size-indicator" class="stat-badge bg-emerald-500/20 text-emerald-400">
+                                <i class="fas fa-circle text-[6px]"></i> Normal
+                            </span>
                         </div>
-                        <div class="theme-selector" data-theme="atom-one-light">
-                            <div class="w-12 h-8 rounded bg-gray-100 border-2 border-transparent"></div>
-                            <span class="text-xs mt-1">Light</span>
-                        </div>
-                        <div class="theme-selector" data-theme="github-dark">
-                            <div class="w-12 h-8 rounded bg-gray-900 border-2 border-transparent"></div>
-                            <span class="text-xs mt-1">GitHub Dark</span>
-                        </div>
-                        <div class="theme-selector" data-theme="github">
-                            <div class="w-12 h-8 rounded bg-white border-2 border-transparent"></div>
-                            <span class="text-xs mt-1">GitHub</span>
+                        <div class="flex items-center gap-2">
+                            <button id="copy-btn" class="btn-action btn-ghost">
+                                <i class="fas fa-copy"></i>
+                                Copy
+                            </button>
+                            <button id="download-btn" class="btn-action btn-primary">
+                                <i class="fas fa-download"></i>
+                                Download PNG
+                            </button>
                         </div>
                     </div>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Background</label>
-                    <div class="flex items-center">
-                        <label class="inline-flex items-center mr-4">
-                            <input type="radio" class="form-radio text-blue-500" name="background" value="solid" checked>
-                            <span class="ml-2">Solid</span>
-                        </label>
-                        <label class="inline-flex items-center">
-                            <input type="radio" class="form-radio text-blue-500" name="background" value="transparent">
-                            <span class="ml-2">Transparent</span>
-                        </label>
+
+                    <!-- Preview Canvas -->
+                    <div class="preview-canvas">
+                        <div id="export-wrapper" class="flex justify-center">
+                            <div id="code-preview" class="code-preview overflow-hidden inline-block" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 32px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);">
+                                <!-- Window Chrome -->
+                                <div id="window-chrome" class="window-chrome rounded-t-lg" style="background: rgba(0,0,0,0.25);">
+                                    <div class="window-dot red"></div>
+                                    <div class="window-dot yellow"></div>
+                                    <div class="window-dot green"></div>
+                                    <span id="window-title" class="window-title text-white"></span>
+                                    <div style="width: 52px;"></div>
+                                </div>
+                                <!-- Code Container -->
+                                <div id="code-container" class="flex" style="background: #282c34; border-radius: 0 0 8px 8px; padding: 16px;">
+                                    <pre id="line-numbers" class="line-numbers text-gray-500 hidden"></pre>
+                                    <pre class="flex-1 overflow-x-auto"><code id="highlighted-code" class="text-sm">// Paste your code to get started</code></pre>
+                                </div>
+                                <!-- Watermark -->
+                                <div id="watermark" class="text-right mt-2 hidden" style="opacity: 0.4; font-size: 10px; color: white;">
+                                    tar.copy
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Padding</label>
-                    <input type="range" id="padding-slider" min="10" max="50" value="20" class="w-full">
-                    <div class="flex justify-between text-xs text-gray-500">
-                        <span>Small</span>
-                        <span>Large</span>
-                    </div>
-                </div>
-                
-                <!-- Preview Container -->
-                <div id="preview-container" class="mt-4 flex justify-center">
-                    <div id="code-preview" class="code-preview bg-gray-800 p-5 w-full overflow-auto">
-                        <pre><code id="highlighted-code" class="text-sm">// Your beautiful code will appear here</code></pre>
+
+                    <!-- Quick Tips -->
+                    <div class="mt-4 flex items-center justify-center gap-6 text-xs text-slate-500">
+                        <span><i class="fas fa-keyboard mr-1"></i> Paste code to begin</span>
+                        <span><i class="fas fa-palette mr-1"></i> Customize appearance</span>
+                        <span><i class="fas fa-download mr-1"></i> Export as PNG</span>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Footer -->
-        <footer class="mt-12 text-center text-gray-500 text-sm">
-            <p>Made with <i class="fas fa-heart text-red-500"></i> for developers | tar.copy © 2023</p>
+        <footer class="mt-8 text-center">
+            <div class="flex items-center justify-center gap-2 text-sm text-slate-600">
+                <span class="font-mono text-slate-500">&lt;/&gt;</span>
+                <span>with</span>
+                <i class="fas fa-heart text-red-500/50"></i>
+                <span>for developers</span>
+            </div>
         </footer>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="toast-message">Copied to clipboard!</span>
     </div>
 
     <script>
@@ -162,142 +534,359 @@
             // Elements
             const codeInput = document.getElementById('code-input');
             const languageSelect = document.getElementById('language-select');
+            const filenameInput = document.getElementById('filename-input');
             const highlightedCode = document.getElementById('highlighted-code');
             const codePreview = document.getElementById('code-preview');
+            const codeContainer = document.getElementById('code-container');
+            const windowChrome = document.getElementById('window-chrome');
+            const windowTitle = document.getElementById('window-title');
+            const lineNumbers = document.getElementById('line-numbers');
+            const watermark = document.getElementById('watermark');
             const downloadBtn = document.getElementById('download-btn');
+            const copyBtn = document.getElementById('copy-btn');
             const clearBtn = document.getElementById('clear-btn');
             const paddingSlider = document.getElementById('padding-slider');
-            const themeSelectors = document.querySelectorAll('.theme-selector');
-            const backgroundRadios = document.querySelectorAll('input[name="background"]');
-            
-            // Current settings
+            const radiusSlider = document.getElementById('radius-slider');
+            const fontsizeSlider = document.getElementById('fontsize-slider');
+            const themeChips = document.querySelectorAll('.theme-chip');
+            const gradientBtns = document.querySelectorAll('.gradient-btn');
+            const exportJsonBtn = document.getElementById('export-json-btn');
+            const importJsonBtn = document.getElementById('import-json-btn');
+            const sizeIndicator = document.getElementById('size-indicator');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+
+            // Toggles
+            const toggleChrome = document.getElementById('toggle-chrome');
+            const toggleLines = document.getElementById('toggle-lines');
+            const toggleShadow = document.getElementById('toggle-shadow');
+            const toggleWatermark = document.getElementById('toggle-watermark');
+
+            // Settings
             let currentTheme = 'atom-one-dark';
-            let currentBackground = 'solid';
-            let currentPadding = 20;
-            
-            // Initialize highlight.js
+            let currentBackground = 'gradient-1';
+            let currentPadding = 32;
+            let currentRadius = 12;
+            let currentFontSize = 14;
+            let currentSize = 'normal';
+            let showChrome = true;
+            let showLines = false;
+            let showShadow = true;
+            let showWatermark = false;
+
+            // Backgrounds
+            const backgrounds = {
+                'gradient-1': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                'gradient-2': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                'gradient-3': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                'gradient-4': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                'gradient-5': 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                'gradient-6': 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+                'gradient-7': 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+                'solid-dark': '#1e293b',
+                'solid-light': '#f1f5f9',
+                'transparent': 'transparent'
+            };
+
+            // Theme backgrounds
+            const themeBackgrounds = {
+                'atom-one-dark': '#282c34',
+                'atom-one-light': '#fafafa',
+                'github-dark': '#0d1117',
+                'github': '#ffffff',
+                'monokai': '#272822',
+                'dracula': '#282a36'
+            };
+
+            // Init
             hljs.highlightAll();
-            
-            // Auto-detect language
+
             function detectLanguage(code) {
                 if (!code) return 'plaintext';
-                
-                // Simple detection based on code patterns
                 if (code.includes('<?php')) return 'php';
-                if (code.includes('def ') || code.includes('import ')) return 'python';
-                if (code.includes('function ') || code.includes('=>') || code.includes('const ') || code.includes('let ') || code.includes('var ')) return 'javascript';
-                if (code.includes('public class ') || code.includes('System.out.println')) return 'java';
-                if (code.includes('using ') || code.includes('namespace ') || code.includes('Console.WriteLine')) return 'csharp';
-                if (code.includes('package ') || code.includes('func ')) return 'go';
-                if (code.includes('<?xml ') || code.includes('<html') || code.includes('<div')) return 'html';
-                if (code.includes('SELECT ') || code.includes('FROM ') || code.includes('WHERE ')) return 'sql';
+                if (code.includes('def ') && code.includes(':')) return 'python';
+                if (code.includes('fn ') && code.includes('->')) return 'rust';
+                if (code.includes('func ') && code.includes('package ')) return 'go';
+                if (code.includes('interface ') && (code.includes(': ') || code.includes('<'))) return 'typescript';
+                if (code.includes('function ') || code.includes('=>') || code.includes('const ') || code.includes('let ')) return 'javascript';
+                if (code.includes('public class ') || code.includes('System.out')) return 'java';
+                if (code.includes('namespace ') || code.includes('Console.')) return 'csharp';
+                if (code.includes('<html') || code.includes('<div') || code.includes('<!DOCTYPE')) return 'html';
+                if (code.includes('SELECT ') || code.includes('FROM ')) return 'sql';
                 if (code.includes('#include ') || code.includes('std::')) return 'cpp';
-                if (code.includes('#!/bin/bash') || code.includes('#!/usr/bin/env bash')) return 'bash';
-                
+                if (code.includes('#!/bin/bash')) return 'bash';
+                if (code.trim().startsWith('{') || code.trim().startsWith('[')) return 'json';
                 return 'plaintext';
             }
-            
-            // Update preview
+
+            function detectSnippetSize(code) {
+                if (!code) return 'normal';
+                const lines = code.split('\n').length;
+                const chars = code.length;
+                if (lines > 200 || chars > 8000) return 'large+';
+                if (lines > 50 || chars > 2000) return 'large';
+                return 'normal';
+            }
+
+            function updateSizeIndicator(size) {
+                currentSize = size;
+                const label = size === 'large+' ? 'Large+' : size.charAt(0).toUpperCase() + size.slice(1);
+                sizeIndicator.innerHTML = `<i class="fas fa-circle text-[6px]"></i> ${label}`;
+                sizeIndicator.className = 'stat-badge';
+                if (size === 'normal') {
+                    sizeIndicator.classList.add('bg-emerald-500/20', 'text-emerald-400');
+                } else if (size === 'large') {
+                    sizeIndicator.classList.add('bg-amber-500/20', 'text-amber-400');
+                } else {
+                    sizeIndicator.classList.add('bg-red-500/20', 'text-red-400');
+                }
+            }
+
+            function generateLineNumbers(code) {
+                const lines = code.split('\n').length;
+                return Array.from({ length: lines }, (_, i) => i + 1).join('\n');
+            }
+
             function updatePreview() {
                 const code = codeInput.value;
-                let language = languageSelect.value === 'auto' ? detectLanguage(code) : languageSelect.value;
-                
-                // Set the language class
-                highlightedCode.className = language;
-                highlightedCode.textContent = code || '// Your beautiful code will appear here';
-                
-                // Highlight the code
+                const language = languageSelect.value === 'auto' ? detectLanguage(code) : languageSelect.value;
+
+                updateSizeIndicator(detectSnippetSize(code));
+
+                highlightedCode.className = `language-${language}`;
+                highlightedCode.textContent = code || '// Paste your code to get started';
                 hljs.highlightElement(highlightedCode);
-                
-                // Update preview styling
-                updatePreviewStyling();
-            }
-            
-            // Update preview styling based on settings
-            function updatePreviewStyling() {
-                // Set padding with a limit
-                codePreview.style.padding = `${Math.min(currentPadding, 30)}px`;
 
-                // Set background
-                if (currentBackground === 'transparent') {
-                    codePreview.style.background = 'transparent';
-                } else {
-                    codePreview.style.background = currentTheme.includes('light') || currentTheme === 'github' ? '#ffffff' : '#282c34';
-                }
+                lineNumbers.textContent = generateLineNumbers(code || '// Paste your code to get started');
+                windowTitle.textContent = filenameInput.value || '';
 
-                // Ensure the preview container dynamically adjusts to content
-                codePreview.style.width = 'auto';
-                codePreview.style.height = 'auto';
+                updateStyling();
             }
-            
-            // Download as PNG
+
+            function updateStyling() {
+                const bgValue = backgrounds[currentBackground];
+                codePreview.style.background = currentBackground === 'transparent' ? 'transparent' : bgValue;
+
+                codePreview.style.padding = `${currentPadding}px`;
+                document.getElementById('padding-value').textContent = `${currentPadding}px`;
+
+                codePreview.style.borderRadius = `${currentRadius}px`;
+                const innerRadius = Math.max(currentRadius - 4, 0);
+                codeContainer.style.borderRadius = showChrome ? `0 0 ${innerRadius}px ${innerRadius}px` : `${innerRadius}px`;
+                windowChrome.style.borderRadius = `${innerRadius}px ${innerRadius}px 0 0`;
+                document.getElementById('radius-value').textContent = `${currentRadius}px`;
+
+                highlightedCode.style.fontSize = `${currentFontSize}px`;
+                lineNumbers.style.fontSize = `${currentFontSize}px`;
+                highlightedCode.style.lineHeight = '1.6';
+                lineNumbers.style.lineHeight = '1.6';
+                document.getElementById('fontsize-value').textContent = `${currentFontSize}px`;
+
+                codePreview.style.boxShadow = showShadow ? '0 25px 50px -12px rgba(0, 0, 0, 0.4)' : 'none';
+                windowChrome.style.display = showChrome ? 'flex' : 'none';
+                lineNumbers.style.display = showLines ? 'block' : 'none';
+                watermark.style.display = showWatermark ? 'block' : 'none';
+                codeContainer.style.background = themeBackgrounds[currentTheme] || '#282c34';
+            }
+
+            function exportAsJson() {
+                const snippet = {
+                    version: '2.0',
+                    code: codeInput.value,
+                    filename: filenameInput.value,
+                    language: languageSelect.value,
+                    theme: currentTheme,
+                    background: currentBackground,
+                    padding: currentPadding,
+                    borderRadius: currentRadius,
+                    fontSize: currentFontSize,
+                    showChrome, showLineNumbers: showLines, showShadow, showWatermark,
+                    size: currentSize,
+                    exportedAt: new Date().toISOString()
+                };
+                const blob = new Blob([JSON.stringify(snippet, null, 2)], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.download = `snippet-${Date.now()}.json`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+                showToast('Exported as JSON!');
+            }
+
+            function importFromJson() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const s = JSON.parse(event.target.result);
+                            if (typeof s.code !== 'string') throw new Error('Invalid JSON');
+
+                            codeInput.value = s.code || '';
+                            filenameInput.value = s.filename || '';
+                            if (s.language) languageSelect.value = s.language;
+                            if (s.theme) {
+                                currentTheme = s.theme;
+                                themeChips.forEach(c => c.classList.toggle('active', c.dataset.theme === s.theme));
+                                loadTheme(s.theme);
+                            }
+                            if (s.background) {
+                                currentBackground = s.background;
+                                gradientBtns.forEach(b => b.classList.toggle('active', b.dataset.bg === s.background));
+                            }
+                            if (s.padding) { currentPadding = s.padding; paddingSlider.value = s.padding; }
+                            if (s.borderRadius !== undefined) { currentRadius = s.borderRadius; radiusSlider.value = s.borderRadius; }
+                            if (s.fontSize) { currentFontSize = s.fontSize; fontsizeSlider.value = s.fontSize; }
+                            if (s.showChrome !== undefined) { showChrome = s.showChrome; toggleChrome.classList.toggle('active', showChrome); }
+                            if (s.showLineNumbers !== undefined) { showLines = s.showLineNumbers; toggleLines.classList.toggle('active', showLines); }
+                            if (s.showShadow !== undefined) { showShadow = s.showShadow; toggleShadow.classList.toggle('active', showShadow); }
+                            if (s.showWatermark !== undefined) { showWatermark = s.showWatermark; toggleWatermark.classList.toggle('active', showWatermark); }
+                            updatePreview();
+                            showToast('Snippet imported!');
+                        } catch (err) {
+                            showToast('Import failed: ' + err.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                input.click();
+            }
+
+            function loadTheme(theme) {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/${theme}.min.css`;
+                link.title = theme;
+                const old = document.querySelector('link[title]');
+                if (old) document.head.removeChild(old);
+                document.head.appendChild(link);
+            }
+
+            function getExportScale() {
+                return currentSize === 'large+' ? 3 : currentSize === 'large' ? 2.5 : 2;
+            }
+
             function downloadAsPNG() {
-                const previewElement = document.getElementById('code-preview');
-                html2canvas(previewElement, {
-                    scale: 2, // Increase resolution for crisp quality
-                    backgroundColor: currentBackground === 'transparent' ? null : previewElement.style.background, // Match theme background
-                    useCORS: true // Ensure cross-origin resources are loaded
+                const wrapper = document.getElementById('export-wrapper');
+                html2canvas(wrapper, {
+                    scale: getExportScale(),
+                    backgroundColor: null,
+                    useCORS: true,
+                    logging: false,
+                    allowTaint: true
                 }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = 'code-screenshot.png';
+                    const filename = filenameInput.value ? filenameInput.value.replace(/\.[^/.]+$/, '') : 'code-screenshot';
+                    link.download = `${filename}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
+                    showToast('Downloaded!');
                 });
             }
-            
+
+            async function copyToClipboard() {
+                const wrapper = document.getElementById('export-wrapper');
+                try {
+                    const canvas = await html2canvas(wrapper, {
+                        scale: getExportScale(),
+                        backgroundColor: null,
+                        useCORS: true,
+                        logging: false,
+                        allowTaint: true
+                    });
+                    canvas.toBlob(async (blob) => {
+                        try {
+                            await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                            showToast('Copied to clipboard!');
+                        } catch (err) {
+                            showToast('Copy failed');
+                        }
+                    });
+                } catch (err) {
+                    showToast('Copy failed');
+                }
+            }
+
+            function showToast(message) {
+                toastMessage.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            }
+
             // Event Listeners
             codeInput.addEventListener('input', updatePreview);
             languageSelect.addEventListener('change', updatePreview);
+            filenameInput.addEventListener('input', updatePreview);
+
             paddingSlider.addEventListener('input', function() {
                 currentPadding = parseInt(this.value);
-                updatePreviewStyling();
+                updateStyling();
             });
-            
-            themeSelectors.forEach(selector => {
-                selector.addEventListener('click', function() {
-                    // Remove active class from all
-                    themeSelectors.forEach(s => s.classList.remove('active'));
-                    // Add active class to clicked
+            radiusSlider.addEventListener('input', function() {
+                currentRadius = parseInt(this.value);
+                updateStyling();
+            });
+            fontsizeSlider.addEventListener('input', function() {
+                currentFontSize = parseInt(this.value);
+                updateStyling();
+            });
+
+            themeChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    themeChips.forEach(c => c.classList.remove('active'));
                     this.classList.add('active');
-                    
-                    // Get theme name
                     currentTheme = this.dataset.theme;
-                    
-                    // Load the new theme
-                    const link = document.createElement('link');
-                    link.rel = 'stylesheet';
-                    link.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/${currentTheme}.min.css`;
-                    link.title = currentTheme;
-                    
-                    // Remove old theme
-                    const oldTheme = document.querySelector('link[title]');
-                    if (oldTheme) {
-                        document.head.removeChild(oldTheme);
-                    }
-                    
-                    // Add new theme
-                    document.head.appendChild(link);
-                    
-                    // Update preview
+                    loadTheme(currentTheme);
                     updatePreview();
                 });
             });
-            
-            backgroundRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    currentBackground = this.value;
-                    updatePreviewStyling();
+
+            gradientBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    gradientBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentBackground = this.dataset.bg;
+                    updateStyling();
                 });
             });
-            
+
+            toggleChrome.addEventListener('click', function() {
+                showChrome = !showChrome;
+                this.classList.toggle('active', showChrome);
+                updateStyling();
+            });
+            toggleLines.addEventListener('click', function() {
+                showLines = !showLines;
+                this.classList.toggle('active', showLines);
+                updateStyling();
+            });
+            toggleShadow.addEventListener('click', function() {
+                showShadow = !showShadow;
+                this.classList.toggle('active', showShadow);
+                updateStyling();
+            });
+            toggleWatermark.addEventListener('click', function() {
+                showWatermark = !showWatermark;
+                this.classList.toggle('active', showWatermark);
+                updateStyling();
+            });
+
             downloadBtn.addEventListener('click', downloadAsPNG);
-            
+            copyBtn.addEventListener('click', copyToClipboard);
             clearBtn.addEventListener('click', function() {
                 codeInput.value = '';
+                filenameInput.value = '';
                 updatePreview();
             });
-            
-            // Initial update
+
+            exportJsonBtn.addEventListener('click', exportAsJson);
+            importJsonBtn.addEventListener('click', importFromJson);
+
+            // Init
             updatePreview();
         });
     </script>
