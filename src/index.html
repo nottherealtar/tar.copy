@@ -50,7 +50,7 @@
         body { font-family: 'Inter', system-ui, sans-serif; background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 50%, #1e293b 100%); min-height: 100vh; }
         .code-input, .code-preview { font-family: 'JetBrains Mono', monospace; tab-size: 2; }
         .hljs { background: transparent !important; padding: 0 !important; }
-        .glass-panel { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(71, 85, 105, 0.3); }
+        .glass-panel { background: rgba(30, 41, 59, 0.35); backdrop-filter: blur(10px); border: 1px solid rgba(71, 85, 105, 0.22); }
 
         /* Window Chrome Styles */
         .window-chrome { display: flex; align-items: center; padding: 12px 16px; gap: 8px; }
@@ -93,14 +93,14 @@
         .theme-chip:hover { transform: translateY(-1px); }
         .theme-chip.active { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
 
-        .btn-action { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; transition: all 0.15s; cursor: pointer; }
+        .btn-action { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; transition: all 0.12s; cursor: pointer; }
         .btn-primary { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35); }
         .btn-ghost { background: rgba(51, 65, 85, 0.5); color: #94a3b8; border: 1px solid rgba(71, 85, 105, 0.5); }
         .btn-ghost:hover { background: rgba(51, 65, 85, 0.8); color: #e2e8f0; }
         .btn-social { padding: 6px 12px; font-size: 11px; }
 
-        .slider-dark { -webkit-appearance: none; height: 4px; border-radius: 2px; background: #334155; }
+        .slider-dark { -webkit-appearance: none; appearance: none; height: 4px; border-radius: 2px; background: #334155; }
         .slider-dark::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #3b82f6; cursor: pointer; }
 
         .preview-canvas { background: repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 20px 20px; border-radius: 12px; padding: 24px; overflow: auto; }
@@ -180,6 +180,7 @@
                         <button id="clear-btn" class="text-xs text-slate-500 hover:text-slate-300"><i class="fas fa-times mr-1"></i>Clear</button>
                     </div>
                     <textarea id="code-input" class="code-input input-dark w-full h-40 p-3 rounded-lg text-sm resize-none" placeholder="// Paste your code here..."></textarea>
+                    <div class="text-[10px] text-slate-500 mt-1">Tip: Ctrl/Cmd+Enter downloads PNG.</div>
                     <div class="grid grid-cols-2 gap-2 mt-2">
                         <select id="language-select" class="input-dark p-2 rounded-lg text-xs">
                             <option value="auto">Auto Detect</option>
@@ -403,17 +404,17 @@
 
                         <!-- Export Buttons -->
                         <div class="flex items-center gap-2">
-                            <button id="copy-btn" class="btn-action btn-ghost">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                            <button id="svg-btn" class="btn-action btn-ghost">
-                                <i class="fas fa-vector-square"></i> SVG
+                            <button id="download-btn" class="btn-action btn-primary">
+                                <i class="fas fa-download"></i> PNG
                             </button>
                             <button id="gif-btn" class="btn-action btn-ghost">
                                 <i class="fas fa-film"></i> GIF
                             </button>
-                            <button id="download-btn" class="btn-action btn-primary">
-                                <i class="fas fa-download"></i> PNG
+                            <button id="svg-btn" class="btn-action btn-ghost">
+                                <i class="fas fa-vector-square"></i> SVG
+                            </button>
+                            <button id="copy-btn" class="btn-action btn-ghost">
+                                <i class="fas fa-copy"></i> Copy
                             </button>
                         </div>
                     </div>
@@ -474,6 +475,7 @@
                         <span><i class="fas fa-lightbulb mr-1 text-yellow-500/50"></i> Use highlight lines for annotations</span>
                         <span><i class="fas fa-magic mr-1 text-purple-500/50"></i> Social presets auto-optimize size</span>
                         <span><i class="fas fa-film mr-1 text-pink-500/50"></i> GIF creates typing animation</span>
+                        <span><i class="fas fa-keyboard mr-1 text-blue-500/50"></i> Ctrl/Cmd+G opens GIF</span>
                     </div>
                 </div>
             </div>
@@ -509,6 +511,13 @@
                     <input type="checkbox" id="gif-cursor" checked class="rounded">
                     <label for="gif-cursor" class="text-sm text-slate-300">Show blinking cursor</label>
                 </div>
+                    <div class="text-xs text-slate-400">
+                        <span class="font-mono text-slate-300">Estimate:</span>
+                        <span id="gif-estimate" class="font-mono">-</span>
+                    </div>
+                    <div id="gif-warning" class="hidden text-sm text-amber-200">
+                        GIF is too long for this mode. Reduce typing speed and/or final pause, or shorten the code.
+                    </div>
                 <div id="gif-progress" class="hidden">
                     <div class="flex items-center gap-2 text-sm text-slate-400">
                         <i class="fas fa-spinner fa-spin"></i>
@@ -590,9 +599,62 @@
             const gifGenerate = document.getElementById('gif-generate');
             const gifSpeed = document.getElementById('gif-speed');
             const gifSpeedValue = document.getElementById('gif-speed-value');
+            const gifPause = document.getElementById('gif-pause');
+            const gifCursor = document.getElementById('gif-cursor');
             const gifProgress = document.getElementById('gif-progress');
             const gifProgressBar = document.getElementById('gif-progress-bar');
             const gifProgressText = document.getElementById('gif-progress-text');
+            const gifEstimate = document.getElementById('gif-estimate');
+            const gifWarning = document.getElementById('gif-warning');
+
+            // GIF generation state (used to support instant cancellation)
+            let gifJobCounter = 0;
+            let activeGifJob = null; // { jobId, cancelled, gif }
+
+            // GIF caps to prevent extremely long generations.
+            const MAX_GIF_FRAMES = 250;
+            const MAX_GIF_DURATION_MS = 15000;
+
+            function formatDuration(ms) {
+                if (!Number.isFinite(ms) || ms < 0) return '-';
+                if (ms < 1000) return `${Math.round(ms)}ms`;
+                const seconds = ms / 1000;
+                if (seconds < 10) return `${seconds.toFixed(2)}s`;
+                return `${seconds.toFixed(1)}s`;
+            }
+
+            function refreshGifEstimate() {
+                const code = codeInput.value || '';
+                const hasCode = code.trim().length > 0;
+
+                const speed = Number(gifSpeed.value);
+                const pause = Number(gifPause.value);
+
+                if (!hasCode) {
+                    gifEstimate.textContent = '-';
+                    gifWarning.classList.add('hidden');
+                    gifGenerate.disabled = true;
+                    return;
+                }
+
+                const charCount = code.length; // matches code.split('') frame loop
+                const expectedFrames = charCount + 1;
+                const durationMs = (charCount * speed) + pause;
+
+                gifEstimate.textContent = `~${formatDuration(durationMs)} / ${expectedFrames} frames`;
+
+                const overFrameCap = expectedFrames > MAX_GIF_FRAMES;
+                const overDurationCap = durationMs > MAX_GIF_DURATION_MS;
+                const overCap = overFrameCap || overDurationCap;
+
+                if (overCap) {
+                    gifWarning.classList.remove('hidden');
+                    gifGenerate.disabled = true;
+                } else {
+                    gifWarning.classList.add('hidden');
+                    gifGenerate.disabled = false;
+                }
+            }
 
             // Settings
             let currentTheme = 'atom-one-dark';
@@ -908,24 +970,50 @@
 
                 gifProgress.classList.remove('hidden');
                 gifGenerate.disabled = true;
+                gifSpeed.disabled = true;
+                gifPause.disabled = true;
+                gifCursor.disabled = true;
+                gifProgressBar.style.width = '0%';
+                gifProgressText.textContent = 'Generating... 0%';
 
                 const speed = parseInt(gifSpeed.value);
-                const pause = parseInt(document.getElementById('gif-pause').value);
-                const showCursor = document.getElementById('gif-cursor').checked;
+                const pause = parseInt(gifPause.value);
+                const showCursor = gifCursor.checked;
                 const wrapper = document.getElementById('export-wrapper');
+
+                // Cancel any in-flight job (shouldn't happen because we disable the button, but it's safe).
+                if (activeGifJob && !activeGifJob.cancelled) {
+                    activeGifJob.cancelled = true;
+                    try {
+                        if (activeGifJob.gif && typeof activeGifJob.gif.abort === 'function') activeGifJob.gif.abort();
+                        else if (activeGifJob.gif && typeof activeGifJob.gif.stop === 'function') activeGifJob.gif.stop();
+                    } catch (e) {
+                        console.warn('Failed to abort previous GIF job:', e);
+                    }
+                }
+
+                const jobId = ++gifJobCounter;
+                activeGifJob = { jobId, cancelled: false, gif: null };
 
                 const gif = new GIF({
                     workers: 2,
                     quality: 10,
                     workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
                 });
+                activeGifJob.gif = gif;
 
                 const chars = code.split('');
-                const totalFrames = chars.length + Math.ceil(pause / speed);
-                let currentFrame = 0;
+                // This generator produces exactly `chars.length + 1` frames:
+                // i = 0..chars.length inclusive, where the final frame uses `pause`.
+                const expectedFrames = chars.length + 1;
+                let framesAdded = 0;
 
                 // Generate frames
                 for (let i = 0; i <= chars.length; i++) {
+                    if (!activeGifJob || activeGifJob.jobId !== jobId || activeGifJob.cancelled) {
+                        break;
+                    }
+
                     const partialCode = chars.slice(0, i).join('') + (showCursor && i < chars.length ? '|' : '');
                     highlightedCode.textContent = partialCode || ' ';
 
@@ -938,22 +1026,43 @@
 
                     try {
                         const canvas = await html2canvas(wrapper, { scale: 1.5, backgroundColor: null, useCORS: true, logging: false });
-                        const delay = i === chars.length ? pause : speed;
-                        gif.addFrame(canvas, { delay, copy: true });
+                        if (activeGifJob && activeGifJob.jobId === jobId && !activeGifJob.cancelled) {
+                            const delay = i === chars.length ? pause : speed;
+                            gif.addFrame(canvas, { delay, copy: true });
+                            framesAdded++;
+                        }
                     } catch (e) {
                         console.error('Frame error:', e);
                     }
 
-                    currentFrame++;
-                    const progress = Math.round((currentFrame / totalFrames) * 100);
+                    if (!activeGifJob || activeGifJob.jobId !== jobId || activeGifJob.cancelled) {
+                        break;
+                    }
+
+                    const progress = Math.round((framesAdded / expectedFrames) * 100);
                     gifProgressBar.style.width = `${progress}%`;
                     gifProgressText.textContent = `Generating... ${progress}%`;
                 }
 
-                // Restore full code
-                updatePreview();
+                // If cancelled, restore UI immediately and do not render/download.
+                if (!activeGifJob || activeGifJob.jobId !== jobId || activeGifJob.cancelled) {
+                    gifProgress.classList.add('hidden');
+                    gifProgressBar.style.width = '0%';
+                    gifSpeed.disabled = false;
+                    gifPause.disabled = false;
+                    gifCursor.disabled = false;
+                    refreshGifEstimate();
+                    updatePreview();
+                    return;
+                }
 
                 gif.on('finished', (blob) => {
+                    // If user cancelled while we were rendering, do nothing.
+                    if (!activeGifJob || activeGifJob.jobId !== jobId || activeGifJob.cancelled) return;
+
+                    gifProgressBar.style.width = '100%';
+                    gifProgressText.textContent = 'Generating... 100%';
+
                     const link = document.createElement('a');
                     link.download = `${filenameInput.value?.replace(/\.[^/.]+$/, '') || 'code-animation'}.gif`;
                     link.href = URL.createObjectURL(blob);
@@ -962,8 +1071,12 @@
 
                     gifModal.classList.remove('show');
                     gifProgress.classList.add('hidden');
-                    gifGenerate.disabled = false;
+                    gifSpeed.disabled = false;
+                    gifPause.disabled = false;
+                    gifCursor.disabled = false;
+                    refreshGifEstimate();
                     gifProgressBar.style.width = '0%';
+                    activeGifJob = null;
                     showToast('GIF created!');
                 });
 
@@ -1043,6 +1156,9 @@
 
             // Event Listeners
             codeInput.addEventListener('input', updatePreview);
+            codeInput.addEventListener('input', function() {
+                if (gifModal.classList.contains('show')) refreshGifEstimate();
+            });
             languageSelect.addEventListener('change', updatePreview);
             filenameInput.addEventListener('input', updatePreview);
             highlightLinesInput.addEventListener('input', updatePreview);
@@ -1116,10 +1232,86 @@
             downloadBtn.addEventListener('click', downloadAsPNG);
             copyBtn.addEventListener('click', copyToClipboard);
             svgBtn.addEventListener('click', exportAsSVG);
-            gifBtn.addEventListener('click', () => gifModal.classList.add('show'));
-            gifCancel.addEventListener('click', () => gifModal.classList.remove('show'));
+            gifBtn.addEventListener('click', () => {
+                gifModal.classList.add('show');
+                // Improve keyboard UX: focus the primary action in the modal.
+                refreshGifEstimate();
+                setTimeout(() => gifGenerate.focus(), 0);
+            });
+            gifCancel.addEventListener('click', () => {
+                gifModal.classList.remove('show');
+
+                if (activeGifJob && !activeGifJob.cancelled) {
+                    activeGifJob.cancelled = true;
+                    try {
+                        if (activeGifJob.gif && typeof activeGifJob.gif.abort === 'function') activeGifJob.gif.abort();
+                        else if (activeGifJob.gif && typeof activeGifJob.gif.stop === 'function') activeGifJob.gif.stop();
+                    } catch (e) {
+                        console.warn('Failed to stop GIF job:', e);
+                    }
+                }
+
+                // Reset UI immediately so the app feels responsive.
+                gifProgress.classList.add('hidden');
+                gifProgressBar.style.width = '0%';
+                gifSpeed.disabled = false;
+                gifPause.disabled = false;
+                gifCursor.disabled = false;
+                activeGifJob = null;
+                updatePreview();
+                refreshGifEstimate();
+                showToast('GIF cancelled');
+            });
             gifGenerate.addEventListener('click', generateGIF);
-            gifSpeed.addEventListener('input', function() { gifSpeedValue.textContent = this.value + 'ms'; });
+            gifSpeed.addEventListener('input', function() {
+                gifSpeedValue.textContent = this.value + 'ms';
+                if (gifModal.classList.contains('show')) refreshGifEstimate();
+            });
+            gifPause.addEventListener('input', function() {
+                if (gifModal.classList.contains('show')) refreshGifEstimate();
+            });
+
+            // Keyboard UX: ray.so-like hotkeys for quick export actions.
+            document.addEventListener('keydown', function(e) {
+                const gifIsOpen = gifModal.classList.contains('show');
+
+                // Always let Escape close/cancel the GIF modal.
+                if (e.key === 'Escape' && gifIsOpen) {
+                    e.preventDefault();
+                    gifCancel.click();
+                    return;
+                }
+
+                // While GIF modal is open, avoid triggering other actions from hotkeys.
+                if (gifIsOpen) return;
+
+                const modKey = e.ctrlKey || e.metaKey;
+                if (!modKey) return;
+
+                const k = (e.key || '').toLowerCase();
+
+                // Ctrl/Cmd+Enter => download PNG
+                if (k === 'enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    downloadAsPNG();
+                    return;
+                }
+
+                // Ctrl/Cmd+Shift+Enter => copy PNG to clipboard
+                if (k === 'enter' && e.shiftKey) {
+                    e.preventDefault();
+                    copyToClipboard();
+                    return;
+                }
+
+                // Ctrl/Cmd+g => open GIF modal
+                if (k === 'g' && !e.altKey) {
+                    e.preventDefault();
+                    gifModal.classList.add('show');
+                    refreshGifEstimate();
+                    setTimeout(() => gifGenerate.focus(), 0);
+                }
+            });
 
             clearBtn.addEventListener('click', function() { codeInput.value = ''; filenameInput.value = ''; highlightLinesInput.value = ''; updatePreview(); });
             exportJsonBtn.addEventListener('click', exportAsJson);
