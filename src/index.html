@@ -624,6 +624,9 @@
             }
 
             function refreshGifEstimate() {
+                // Do not toggle UI state mid-generation.
+                if (activeGifJob && !activeGifJob.cancelled) return;
+
                 const code = codeInput.value || '';
                 const hasCode = code.trim().length > 0;
 
@@ -636,22 +639,38 @@
                     gifGenerate.disabled = true;
                     return;
                 }
+                gifGenerate.disabled = false;
 
-                const charCount = code.length; // matches code.split('') frame loop
-                const expectedFrames = charCount + 1;
+                const charCount = code.length; // matches chars.length frame loop
                 const durationMs = (charCount * speed) + pause;
+
+                // If naive per-character frames would exceed the cap, sample typing frames.
+                const typingMaxFrames = MAX_GIF_FRAMES - 1; // exclude the final pause frame
+                const step = (charCount + 1 > MAX_GIF_FRAMES) ? Math.ceil(charCount / typingMaxFrames) : 1;
+
+                // Typing frames are for c=0.. <L (sampled by step). Final frame is at c=L.
+                const sampledTypingFrames = Math.ceil(charCount / step);
+                const expectedFrames = sampledTypingFrames + 1;
 
                 gifEstimate.textContent = `~${formatDuration(durationMs)} / ${expectedFrames} frames`;
 
-                const overFrameCap = expectedFrames > MAX_GIF_FRAMES;
                 const overDurationCap = durationMs > MAX_GIF_DURATION_MS;
-                const overCap = overFrameCap || overDurationCap;
+                const isSampled = step > 1;
 
-                if (overCap) {
+                if (isSampled || overDurationCap) {
                     gifWarning.classList.remove('hidden');
-                    gifGenerate.disabled = true;
+                    if (isSampled) {
+                        if (overDurationCap) {
+                            gifWarning.textContent = `Large snippet detected: generating with sampled typing frames (~${expectedFrames} frames). This may be long—reduce typing speed and/or final pause.`;
+                        } else {
+                            gifWarning.textContent = `Large snippet detected: generating with sampled typing frames (~${expectedFrames} frames) to stay fast.`;
+                        }
+                    } else {
+                        gifWarning.textContent = `This animation may be long (~${formatDuration(durationMs)}). Consider reducing typing speed or final pause.`;
+                    }
                 } else {
                     gifWarning.classList.add('hidden');
+                    // Always allow generation for large snippets; sampling makes it manageable.
                     gifGenerate.disabled = false;
                 }
             }
@@ -1003,21 +1022,37 @@
                 activeGifJob.gif = gif;
 
                 const chars = code.split('');
-                // This generator produces exactly `chars.length + 1` frames:
-                // i = 0..chars.length inclusive, where the final frame uses `pause`.
-                const expectedFrames = chars.length + 1;
+                const charCount = chars.length;
+
+                // If naive per-character frames would exceed the cap, sample typing frames.
+                const typingMaxFrames = MAX_GIF_FRAMES - 1; // exclude the final pause frame
+                const step = (charCount + 1 > MAX_GIF_FRAMES) ? Math.ceil(charCount / typingMaxFrames) : 1;
+
+                // Typing frames are at c values, where c is number of characters "typed".
+                // We always add a final frame at c=charCount which uses `pause`.
+                const cValues = [];
+                for (let c = 0; c < charCount; c += step) {
+                    cValues.push(c);
+                }
+                cValues.push(charCount);
+
+                const expectedFrames = cValues.length;
                 let framesAdded = 0;
 
+                const language = languageSelect.value === 'auto' ? detectLanguage(code) : languageSelect.value;
+
                 // Generate frames
-                for (let i = 0; i <= chars.length; i++) {
+                for (let idx = 0; idx < cValues.length; idx++) {
                     if (!activeGifJob || activeGifJob.jobId !== jobId || activeGifJob.cancelled) {
                         break;
                     }
 
-                    const partialCode = chars.slice(0, i).join('') + (showCursor && i < chars.length ? '|' : '');
+                    const c = cValues[idx];
+                    const nextC = idx === cValues.length - 1 ? charCount : cValues[idx + 1];
+
+                    const partialCode = chars.slice(0, c).join('') + (showCursor && c < charCount ? '|' : '');
                     highlightedCode.textContent = partialCode || ' ';
 
-                    const language = languageSelect.value === 'auto' ? detectLanguage(code) : languageSelect.value;
                     highlightedCode.className = `language-${language}`;
                     hljs.highlightElement(highlightedCode);
                     lineNumbers.innerHTML = generateLineNumbers(partialCode || ' ');
@@ -1027,7 +1062,7 @@
                     try {
                         const canvas = await html2canvas(wrapper, { scale: 1.5, backgroundColor: null, useCORS: true, logging: false });
                         if (activeGifJob && activeGifJob.jobId === jobId && !activeGifJob.cancelled) {
-                            const delay = i === chars.length ? pause : speed;
+                            const delay = idx === cValues.length - 1 ? pause : (nextC - c) * speed;
                             gif.addFrame(canvas, { delay, copy: true });
                             framesAdded++;
                         }
