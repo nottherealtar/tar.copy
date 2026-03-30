@@ -1060,7 +1060,8 @@
                     await new Promise(r => setTimeout(r, 10));
 
                     try {
-                        const canvas = await html2canvas(wrapper, { scale: 1.5, backgroundColor: null, useCORS: true, logging: false });
+                        // allowTaint is important here: gif.js may read pixels via toDataURL().
+                        const canvas = await html2canvas(wrapper, { scale: 1.5, backgroundColor: null, useCORS: true, allowTaint: true, logging: false });
                         if (activeGifJob && activeGifJob.jobId === jobId && !activeGifJob.cancelled) {
                             const delay = idx === cValues.length - 1 ? pause : (nextC - c) * speed;
                             gif.addFrame(canvas, { delay, copy: true });
@@ -1075,8 +1076,11 @@
                     }
 
                     const progress = Math.round((framesAdded / expectedFrames) * 100);
-                    gifProgressBar.style.width = `${progress}%`;
-                    gifProgressText.textContent = `Generating... ${progress}%`;
+                    // Only use the first ~90% of the bar for frame capture.
+                    // Rendering is handled by gif.js progress events.
+                    const displayed = Math.min(progress, 90);
+                    gifProgressBar.style.width = `${displayed}%`;
+                    gifProgressText.textContent = `Generating frames... ${progress}%`;
                 }
 
                 // If cancelled, restore UI immediately and do not render/download.
@@ -1091,10 +1095,48 @@
                     return;
                 }
 
+                // Ensure the preview is fully restored before gif.js starts rendering.
+                updatePreview();
+
+                // Show that we're now rendering the GIF (distinct from frame capture).
+                gifProgressBar.style.width = '90%';
+                gifProgressText.textContent = 'Rendering GIF...';
+
+                // Fail-safe: if gif.js never calls "finished" (can happen on canvas export errors),
+                // reset the UI so the user isn't stuck.
+                const renderFailTimeoutMs = MAX_GIF_DURATION_MS + 12000;
+                const jobIdForTimeout = jobId;
+                let finishedTimeoutId = setTimeout(() => {
+                    if (!activeGifJob || activeGifJob.jobId !== jobIdForTimeout || activeGifJob.cancelled) return;
+
+                    gifProgress.classList.add('hidden');
+                    gifProgressBar.style.width = '0%';
+                    gifSpeed.disabled = false;
+                    gifPause.disabled = false;
+                    gifCursor.disabled = false;
+                    gifGenerate.disabled = false;
+                    refreshGifEstimate();
+                    updatePreview();
+                    activeGifJob = null;
+                    showToast('GIF generation failed. Try lowering typing speed or pause, or shorten the code.');
+                }, renderFailTimeoutMs);
+
+                gif.on('progress', (p) => {
+                    if (!activeGifJob || activeGifJob.jobId !== jobId || activeGifJob.cancelled) return;
+
+                    // gif.js passes either 0..1 or 0..100 depending on build/version.
+                    const raw = Number(p);
+                    const renderPercent = raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
+                    const displayed = 90 + Math.round((renderPercent / 100) * 10);
+                    gifProgressBar.style.width = `${Math.min(displayed, 100)}%`;
+                    gifProgressText.textContent = `Rendering GIF... ${renderPercent}%`;
+                });
+
                 gif.on('finished', (blob) => {
                     // If user cancelled while we were rendering, do nothing.
                     if (!activeGifJob || activeGifJob.jobId !== jobId || activeGifJob.cancelled) return;
 
+                    clearTimeout(finishedTimeoutId);
                     gifProgressBar.style.width = '100%';
                     gifProgressText.textContent = 'Generating... 100%';
 
